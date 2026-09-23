@@ -32,8 +32,7 @@ body[data-stage="light"]{
 img{max-width:100%}
 html,body{height:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
-  -webkit-font-smoothing:antialiased;overflow:hidden;
-  -webkit-tap-highlight-color:transparent}
+  -webkit-font-smoothing:antialiased;overflow:hidden;-webkit-tap-highlight-color:transparent}
 button,textarea,input{font:inherit;color:inherit}
 button{background:none;border:none;cursor:pointer}
 :focus-visible{outline:2px solid var(--brand);outline-offset:3px;border-radius:3px}
@@ -67,35 +66,44 @@ button{background:none;border:none;cursor:pointer}
   transition:color .15s,border-color .15s,background .15s}
 .tool:hover{color:var(--brand);border-color:var(--line);background:var(--bg2)}
 .tool.wide{font-size:11.5px;font-weight:500;padding:0 10px}
-.tool.cast.on{color:var(--signal);border-color:currentColor;
+.tool.on{color:var(--brand);border-color:var(--brand-dim);background:var(--brand-dim)}
+.tool.prep.on{color:var(--signal);border-color:currentColor;
   background:color-mix(in srgb,var(--signal) 12%,transparent)}
-.tool.peers{color:var(--brand);border-color:var(--brand-dim);background:var(--brand-dim);
-  font-family:var(--mono);font-size:11px;cursor:default}
-.tool.cast.on::before,.tool.peers::before{content:"";width:6px;height:6px;border-radius:50%;
-  background:currentColor;margin-right:6px;flex:none;animation:pulse 2.4s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
-@media (prefers-reduced-motion:reduce){.tool.cast.on::before,.tool.peers::before{animation:none}}
 .seg-switch{display:flex;border:1px solid var(--line);border-radius:3px;overflow:hidden}
 .seg-switch button{padding:0 11px;height:30px;font-size:11.5px;color:var(--muted2)}
 .seg-switch button.on{background:var(--brand-dim);color:var(--brand)}
 
-.stage{position:relative;flex:1;overflow-y:auto;overflow-x:hidden;scroll-behavior:smooth;cursor:pointer;
+.mid{flex:1;display:flex;min-height:0;position:relative}
+.stage{position:relative;flex:1;min-width:0;overflow-y:auto;overflow-x:hidden;scroll-behavior:smooth;
+  cursor:pointer;
   -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 11%,#000 89%,transparent 100%);
           mask-image:linear-gradient(to bottom,transparent 0,#000 11%,#000 89%,transparent 100%)}
 .stage::-webkit-scrollbar{width:0}
 .reading{max-width:34em;margin:0 auto;padding:44vh 6vw 52vh;font-family:var(--serif);
   font-size:calc(clamp(21px,2.55vw,42px) * var(--fs));line-height:1.52;letter-spacing:.002em}
+.app.prepping .reading{font-size:calc(clamp(17px,1.5vw,23px) * var(--fs));padding:8vh 3vw 40vh;
+  max-width:46em}
+
 .doc-h{margin:0 0 1.5em;font-family:var(--serif);font-weight:500;font-size:.84em;
   line-height:1.24;color:var(--ink);text-wrap:balance}
 .doc-h .kicker{display:block;font-family:var(--mono);font-weight:400;font-size:.3em;
   letter-spacing:.24em;text-transform:uppercase;color:var(--brand);margin-bottom:1.1em}
 .doc-h::after{content:"";display:block;width:2.4em;height:1px;background:var(--brand);
   margin-top:.75em;opacity:.55}
+
+.ponto-h{margin:0 0 .75em;display:flex;align-items:baseline;gap:.7em;flex-wrap:wrap}
+.ponto-h .tag{font-family:var(--mono);font-size:.3em;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--brand);border:1px solid var(--brand-dim);background:var(--brand-dim);
+  border-radius:2px;padding:.5em .8em}
+.ponto-h .ref{font-family:var(--mono);font-size:.26em;letter-spacing:.14em;color:var(--muted)}
+.omitido{height:1px;background:var(--line);width:34%;margin:0 auto 1.5em}
+
 .par{margin:0 0 1.05em}
 .par-num{font-family:var(--mono);font-size:.5em;letter-spacing:.06em;color:var(--brand);
   vertical-align:.45em;margin-right:.7em;opacity:.85}
 .mark{font-family:var(--mono);font-size:.42em;vertical-align:.72em;color:var(--brand);
   margin-right:.16em;opacity:.55}
+.gap{color:var(--muted);opacity:.5;letter-spacing:.1em}
 .seg{transition:opacity .45s ease,filter .45s ease;color:var(--ink);opacity:.3}
 .seg.future{opacity:.3;filter:blur(4px)}
 .seg.future.f2{opacity:.24;filter:blur(6px)}
@@ -106,9 +114,21 @@ button{background:none;border:none;cursor:pointer}
 .seg.current .mark{opacity:1}
 .par.has-current .par-num{opacity:1}
 
+/* modo preparação: texto todo legível e clicável */
+.app.prepping .seg{opacity:.55;filter:none !important;cursor:pointer;
+  border-radius:3px;padding:.05em 0;transition:background .12s,opacity .12s}
+.app.prepping .seg:hover{opacity:1;background:var(--bg3)}
+.app.prepping .seg.emtrecho{opacity:1;
+  background:color-mix(in srgb,var(--brand) 13%,transparent);
+  box-shadow:inset 0 -1px 0 var(--brand-dim)}
+.app.prepping .seg.inicio{opacity:1;background:color-mix(in srgb,var(--signal) 26%,transparent);
+  outline:1px solid var(--signal)}
+.app.prepping .par-num{opacity:.9}
+.app.prepping .mark{opacity:.8}
+
 .arrows{position:absolute;z-index:25;right:20px;top:50%;transform:translateY(-50%);
   display:flex;flex-direction:column;gap:10px;transition:opacity .5s}
-.app.hidechrome .arrows{opacity:0;pointer-events:none}
+.app.hidechrome .arrows,.app.prepping .arrows{opacity:0;pointer-events:none}
 .arrow{width:46px;height:40px;display:grid;place-items:center;border:1px solid var(--line);
   border-radius:4px;background:var(--bg2);color:var(--muted2);
   transition:color .16s,border-color .16s,background .16s,transform .16s}
@@ -129,15 +149,84 @@ button{background:none;border:none;cursor:pointer}
 .keys{display:flex;gap:12px;color:var(--muted);font-size:11px;white-space:nowrap;flex-wrap:wrap}
 .keys kbd{font-family:var(--mono);font-size:10px;border:1px solid var(--line);border-radius:3px;
   padding:1px 5px;color:var(--muted2);background:var(--bg2)}
-@media (max-width:900px){.keys{display:none}.rail .doc b{max-width:30vw}}
+@media (max-width:1000px){.keys{display:none}.rail .doc b{max-width:26vw}}
 
-/* tela inicial do palco */
+/* ---- painel da preparação ---- */
+.prep-panel{width:420px;flex:none;background:var(--bg2);border-left:1px solid var(--line);
+  display:none;flex-direction:column;min-height:0}
+.app.prepping .prep-panel{display:flex}
+@media (max-width:1100px){.prep-panel{width:340px}}
+@media (max-width:820px){.prep-panel{width:290px}}
+.prep-head{padding:16px 18px 13px;border-bottom:1px solid var(--line);display:flex;
+  flex-direction:column;gap:6px}
+.prep-head .lab{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--signal)}
+.prep-head h2{margin:0;font-family:var(--serif);font-weight:500;font-size:20px}
+.prep-head p{margin:0;color:var(--muted2);font-size:12.5px;line-height:1.55}
+.prep-list{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:9px}
+.prep-empty{color:var(--muted);font-size:12.5px;line-height:1.6;padding:10px 4px}
+.ponto{border:1px solid var(--line);border-radius:4px;background:var(--bg);padding:10px 11px;
+  display:flex;flex-direction:column;gap:8px}
+.ponto.sel{border-color:var(--brand)}
+.ponto.aberto{border-color:var(--signal);
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--signal) 35%,transparent)}
+.ponto .top{display:flex;align-items:center;gap:7px}
+.ponto input{flex:1;min-width:0;background:none;border:none;font-size:13.5px;font-weight:600;
+  padding:2px 0;border-bottom:1px solid transparent}
+.ponto input:focus{outline:none;border-bottom-color:var(--brand)}
+.ponto .ref{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.1em}
+.ponto .acts{display:flex;gap:6px;align-items:center}
+.ponto .acts .grow{flex:1}
+.icon{width:26px;height:24px;border:1px solid var(--line);border-radius:3px;color:var(--muted);
+  display:grid;place-items:center;font-size:12px}
+.icon:hover{color:var(--alert);border-color:var(--alert)}
+.icon.up:hover{color:var(--brand);border-color:var(--brand)}
+.fim{height:26px;padding:0 11px;border:1px solid var(--signal);color:var(--signal);border-radius:3px;
+  font-size:11.5px;font-weight:600;background:color-mix(in srgb,var(--signal) 12%,transparent)}
+.fim:hover{filter:brightness(1.15)}
+.reabrir{height:26px;padding:0 11px;border:1px solid var(--line);color:var(--muted2);
+  border-radius:3px;font-size:11.5px}
+.reabrir:hover{color:var(--brand);border-color:var(--brand)}
+
+/* observações dentro da caixinha do ponto */
+.obs{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:3px;
+  overflow:hidden;background:var(--bg2)}
+.obs-lab{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted);padding:7px 9px 5px}
+.obs-row{border-top:1px solid var(--line)}
+.obs-row:first-of-type{border-top:none}
+.obs-cab{display:flex;align-items:stretch}
+.obs-x{width:30px;flex:none;border-left:1px solid var(--line);color:var(--muted);font-size:11px;
+  display:grid;place-items:center;transition:color .12s,background .12s}
+.obs-x:hover{color:var(--alert);background:color-mix(in srgb,var(--alert) 12%,transparent)}
+.obs-lin{flex:1;min-width:0;text-align:left;display:flex;gap:7px;align-items:baseline;padding:7px 9px;
+  font-family:var(--serif);font-size:12.5px;line-height:1.4;color:var(--muted2);
+  transition:background .12s,color .12s}
+.obs-lin:hover{background:var(--bg3);color:var(--ink)}
+.obs-lin .n{font-family:var(--mono);font-size:9.5px;color:var(--brand);flex:none;opacity:.8}
+.obs-lin .s{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.obs-lin .dot{width:5px;height:5px;border-radius:50%;background:var(--brand);flex:none;opacity:0}
+.obs-row.tem .obs-lin .dot{opacity:1}
+.obs-row.tem .obs-lin{color:var(--ink)}
+.obs-row.todo .obs-lin{font-family:var(--sans);font-weight:600;font-size:11.5px;
+  letter-spacing:.02em;color:var(--ink)}
+.obs-row textarea{width:100%;min-height:76px;resize:vertical;background:var(--bg);border:none;
+  border-top:1px solid var(--line);padding:9px 11px;font-family:var(--sans);font-size:13px;
+  line-height:1.6;display:block}
+.obs-row textarea:focus{outline:none;box-shadow:inset 2px 0 0 var(--brand)}
+.prep-foot{padding:13px 16px calc(13px + env(safe-area-inset-bottom));border-top:1px solid var(--line);
+  display:flex;flex-direction:column;gap:9px}
+.prep-sync{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--muted);display:flex;align-items:center;gap:7px}
+.prep-sync b{color:var(--brand);font-weight:400}
+
+/* tela inicial */
 #loader{position:absolute;inset:0;z-index:40;background:var(--bg);display:grid;
   place-items:center;padding:clamp(20px,4vw,52px);overflow:auto}
-.load-card{width:min(880px,100%);display:grid;gap:26px;
+.load-card{width:min(900px,100%);display:grid;gap:26px;
   grid-template-columns:minmax(0,1.35fr) minmax(0,.65fr);align-items:start}
-@media (max-width:760px){.load-card{grid-template-columns:1fr}}
-.load-left{display:flex;flex-direction:column;gap:22px;min-width:0}
+@media (max-width:780px){.load-card{grid-template-columns:1fr}}
+.load-left{display:flex;flex-direction:column;gap:20px;min-width:0}
 .brand{display:flex;flex-direction:column;gap:7px}
 .brand .logo{height:34px;width:159px;margin-bottom:4px}
 .brand .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.22em;
@@ -145,7 +234,7 @@ button{background:none;border:none;cursor:pointer}
 .brand h1{font-family:var(--serif);font-weight:500;font-size:clamp(34px,6vw,52px);
   line-height:1.03;margin:0;text-wrap:balance}
 .brand p{margin:0;color:var(--muted2);font-size:15px;line-height:1.6;max-width:44ch}
-.drop{border:1px dashed var(--line);border-radius:4px;background:var(--bg2);padding:30px 24px;
+.drop{border:1px dashed var(--line);border-radius:4px;background:var(--bg2);padding:26px 24px;
   text-align:center;display:flex;flex-direction:column;align-items:center;gap:11px;
   transition:border-color .2s,background .2s}
 .drop.over{border-color:var(--brand);background:var(--bg3)}
@@ -160,7 +249,19 @@ button{background:none;border:none;cursor:pointer}
 .note-small{color:var(--muted);font-size:12px;line-height:1.6}
 #loadErr{color:var(--alert);font-size:13px;display:none}
 
-/* cartão do QR */
+.saved-list{display:flex;flex-direction:column;gap:8px}
+.saved-list h3{margin:0 0 2px;font-family:var(--mono);font-size:10px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--brand);font-weight:400}
+.enc{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:1px solid var(--line);
+  border-radius:4px;background:var(--bg2);padding:11px 13px;transition:border-color .16s}
+.enc:hover{border-color:var(--brand)}
+.enc .d{font-family:var(--mono);font-size:11px;color:var(--brand);
+  font-variant-numeric:tabular-nums;flex:none}
+.enc .t{flex:1;min-width:0;font-family:var(--serif);font-size:15px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.enc .p{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);flex:none}
+
 .pair{border:1px solid var(--line);border-radius:5px;background:var(--bg2);padding:18px;
   display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
 .pair .lab{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;
@@ -186,7 +287,7 @@ button{background:none;border:none;cursor:pointer}
   background:var(--brand-dim);color:var(--ink);font-size:12.5px;line-height:1.6;border-radius:0 3px 3px 0}
 
 .toast{position:fixed;left:50%;bottom:64px;transform:translate(-50%,10px);z-index:70;
-  max-width:min(520px,86vw);padding:11px 16px;border:1px solid var(--line);border-radius:4px;
+  max-width:min(560px,86vw);padding:11px 16px;border:1px solid var(--line);border-radius:4px;
   background:var(--bg2);color:var(--ink);font-size:13px;line-height:1.55;box-shadow:var(--shadow);
   opacity:0;pointer-events:none;transition:opacity .25s,transform .25s}
 .toast.show{opacity:1;transform:translate(-50%,0)}
@@ -212,7 +313,8 @@ body[data-stage="light"] .veil{background:rgba(60,52,36,.42)}
 
 /* ===================== CONTROLE (celular) ===================== */
 .ctrl{position:fixed;inset:0;display:grid;grid-template-rows:auto auto 1fr auto;background:var(--bg)}
-.ctrl-head{display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;
+.ctrl-head{display:flex;align-items:center;gap:10px;
+  padding:calc(10px + env(safe-area-inset-top)) 14px 10px;
   border-bottom:1px solid var(--line);background:var(--bg)}
 .ctrl-head .logo{height:15px;width:70px}
 .ctrl-head .who{min-width:0;flex:1;display:flex;flex-direction:column;gap:1px}
@@ -220,10 +322,11 @@ body[data-stage="light"] .veil{background:rgba(60,52,36,.42)}
   overflow:hidden;text-overflow:ellipsis}
 .ctrl-head .who span{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;
   text-transform:uppercase;color:var(--muted)}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex:none;
-  transition:background .3s}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex:none;transition:background .3s}
 .dot.ok{background:var(--brand);animation:pulse 2.6s ease-in-out infinite}
 .dot.err{background:var(--alert)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+@media (prefers-reduced-motion:reduce){.dot.ok{animation:none}}
 .ctrl-time{font-family:var(--mono);font-size:12px;color:var(--muted2);font-variant-numeric:tabular-nums}
 .ctrl-prog{height:2px;background:var(--line);position:relative}
 .ctrl-prog i{position:absolute;inset:0 auto 0 0;background:var(--brand);transition:width .3s}
@@ -231,11 +334,21 @@ body[data-stage="light"] .veil{background:rgba(60,52,36,.42)}
   display:flex;flex-direction:column;gap:18px}
 .blk{display:flex;flex-direction:column;gap:8px}
 .blk .lab{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--brand);display:flex;align-items:center;gap:8px}
+  color:var(--brand);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .blk .lab em{font-style:normal;color:var(--muted);letter-spacing:.08em}
-.now-text{font-family:var(--serif);font-size:20px;line-height:1.45;color:var(--ink)}
+.ponto-chip{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--brand);border:1px solid var(--brand-dim);background:var(--brand-dim);
+  border-radius:2px;padding:3px 7px}
+.obs-text{font-family:var(--sans);font-size:14.5px;line-height:1.65;color:var(--ink);
+  background:var(--bg2);border-left:2px solid var(--brand);border-radius:0 4px 4px 0;
+  padding:12px 14px;white-space:pre-wrap}
+.now-text{font-family:var(--serif);font-size:20px;line-height:1.5;color:var(--ink)}
 .next-text{font-family:var(--serif);font-size:15px;line-height:1.5;color:var(--muted2)}
-#notas{width:100%;min-height:32vh;resize:vertical;background:var(--bg2);border:1px solid var(--line);
+.now-text .mark,.next-text .mark{font-family:var(--mono);font-size:.5em;vertical-align:.7em;
+  color:var(--brand);margin-right:.2em;opacity:.85}
+.now-text .par-num,.next-text .par-num{font-family:var(--mono);font-size:.55em;vertical-align:.4em;
+  color:var(--brand);margin-right:.5em;opacity:.85}
+#notas{width:100%;min-height:30vh;resize:vertical;background:var(--bg2);border:1px solid var(--line);
   border-radius:5px;padding:13px 14px;font-family:var(--sans);font-size:15px;line-height:1.65}
 #notas::placeholder{color:var(--muted)}
 #notas:focus{border-color:var(--brand);outline:none}
@@ -249,8 +362,7 @@ body[data-stage="light"] .veil{background:rgba(60,52,36,.42)}
   color:var(--muted2);font-size:12px;font-weight:500;display:flex;align-items:center;gap:5px}
 .mini:active{background:var(--bg3)}
 .mini.on{color:var(--brand);border-color:var(--brand-dim);background:var(--brand-dim)}
-.ctrl-count{font-family:var(--mono);font-size:11.5px;color:var(--muted2);
-  font-variant-numeric:tabular-nums}
+.ctrl-count{font-family:var(--mono);font-size:11.5px;color:var(--muted2);font-variant-numeric:tabular-nums}
 .ctrl-main{display:grid;grid-template-columns:1fr 1.7fr;gap:9px}
 .big{height:62px;border-radius:6px;border:1px solid var(--line);background:var(--bg2);
   display:flex;align-items:center;justify-content:center;gap:9px;font-size:15px;font-weight:600;
@@ -263,8 +375,7 @@ body[data-stage="light"] .veil{background:rgba(60,52,36,.42)}
   line-height:1.65;display:flex;flex-direction:column;gap:14px;align-items:center}
 .ctrl-empty .logo{height:26px;width:121px;margin-bottom:6px}
 @media (min-width:620px){
-  .ctrl-body{max-width:640px;width:100%;margin:0 auto}
-  .ctrl-bar{max-width:640px;width:100%;margin:0 auto}
+  .ctrl-body,.ctrl-bar{max-width:640px;width:100%;margin:0 auto}
   .now-text{font-size:23px}
 }
 </style>
@@ -279,28 +390,45 @@ body[data-stage="light"] .veil{background:rgba(60,52,36,.42)}
     <div class="doc"><b id="docTitle">—</b><span id="docMeta"></span></div>
     <div class="spacer"></div>
     <div class="tools">
-      <div class="tool peers" id="peers" hidden>0</div>
+      <button class="tool wide prep" id="prepBtn" title="Selecionar os trechos do encontro (P)">Preparar</button>
+      <button class="tool wide" id="soTrechosBtn" hidden title="Alternar entre só os pontos e o capítulo inteiro (C)">Capítulo completo</button>
       <div class="seg-switch" role="group" aria-label="Unidade de avanço">
         <button id="mSent" class="on" title="Avançar frase a frase">Frase</button>
-        <button id="mPar" title="Avançar parágrafo a parágrafo">Parágrafo</button>
+        <button id="mPar" title="Avançar em blocos">Parágrafo</button>
       </div>
       <button class="tool wide" id="qrBtn" title="Mostrar o QR para conectar os celulares (Q)">Celulares</button>
       <button class="tool" id="fMinus" title="Diminuir a fonte" aria-label="Diminuir a fonte">A−</button>
       <button class="tool" id="fPlus" title="Aumentar a fonte" aria-label="Aumentar a fonte">A+</button>
       <button class="tool" id="themeBtn" title="Alternar claro / escuro" aria-label="Alternar tema">☾</button>
-      <button class="tool wide cast" id="castBtn" title="Modo transmissão: nada de privado abre nesta janela (Z)">Transmissão</button>
       <button class="tool" id="fullBtn" title="Tela cheia (F)" aria-label="Tela cheia">⛶</button>
       <button class="tool wide" id="swapBtn" title="Carregar outro texto (T)">Trocar</button>
     </div>
   </div>
 
-  <div class="stage" id="stage" tabindex="0"><div class="reading" id="reading"></div></div>
+  <div class="mid">
+    <div class="stage" id="stage" tabindex="0"><div class="reading" id="reading"></div></div>
+
+    <!-- painel da preparação (FIFI) -->
+    <aside class="prep-panel" id="prepPanel" aria-label="Preparação do encontro">
+      <div class="prep-head">
+        <div class="lab">Preparação · FIFI</div>
+        <h2>Pontos do encontro</h2>
+        <p id="prepDica">Clique na primeira frase do trecho — nasce um ponto novo, que cresce a cada
+           clique. Clicar dentro de um ponto já criado reabre ele.</p>
+      </div>
+      <div class="prep-list" id="prepList"></div>
+      <div class="prep-foot">
+        <div class="prep-sync" id="prepSync">Salvo para o dia do encontro</div>
+        <button class="btn solid" id="prepDone">Concluir preparação</button>
+      </div>
+    </aside>
+  </div>
 
   <div class="arrows" id="arrows">
-    <button class="arrow" id="upBtn" title="Frase anterior" aria-label="Frase anterior">
+    <button class="arrow" id="upBtn" title="Voltar" aria-label="Voltar">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"></path><path d="M5 12l7-7 7 7"></path></svg>
     </button>
-    <button class="arrow" id="downBtn" title="Próxima frase" aria-label="Próxima frase">
+    <button class="arrow" id="downBtn" title="Avançar" aria-label="Avançar">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"></path><path d="M19 12l-7 7-7-7"></path></svg>
     </button>
   </div>
@@ -311,9 +439,10 @@ body[data-stage="light"] .veil{background:rgba(60,52,36,.42)}
     <div class="keys">
       <span><kbd>espaço</kbd> <kbd>→</kbd> avança</span>
       <span><kbd>←</kbd> volta</span>
+      <span><kbd>P</kbd> preparar</span>
+      <span><kbd>C</kbd> capítulo</span>
       <span><kbd>Q</kbd> celulares</span>
       <span><kbd>N</kbd> nota</span>
-      <span><kbd>Z</kbd> transmissão</span>
       <span><kbd>F</kbd> tela cheia</span>
     </div>
   </div>
@@ -325,12 +454,17 @@ body[data-stage="light"] .veil{background:rgba(60,52,36,.42)}
           <div class="logo" role="img" aria-label="Voz do Ser — a voz de quem realmente somos"></div>
           <div class="eyebrow">Clube de estudos</div>
           <h1>Um Curso em Milagres</h1>
-          <p>Abra o texto do encontro e conduza a leitura frase a frase, para que todos
-             acompanhem o mesmo trecho ao mesmo tempo.</p>
+          <p>Prepare os pontos do encontro e conduza a leitura trecho a trecho, para que todos
+             acompanhem a mesma passagem ao mesmo tempo.</p>
+        </div>
+
+        <div class="saved-list" id="encList" hidden>
+          <h3>Encontros preparados</h3>
+          <div id="encItems"></div>
         </div>
 
         <div class="drop" id="drop">
-          <div class="big">Solte o PDF do dia aqui</div>
+          <div class="big">Solte o PDF do capítulo aqui</div>
           <div class="sub">ou</div>
           <button class="btn solid" id="pickBtn">Escolher arquivo</button>
           <input type="file" id="file" accept="application/pdf,.pdf" hidden>
@@ -341,19 +475,36 @@ body[data-stage="light"] .veil{background:rgba(60,52,36,.42)}
 
         <div class="load-actions">
           <button class="btn" id="demoBtn">Ver como funciona</button>
-          <button class="btn" id="resumeBtn" hidden>Retomar de onde parei</button>
         </div>
 
         <details class="help">
-          <summary>Como usar no Zoom sem mostrar as suas notas</summary>
+          <summary>Como preparar os pontos (a FIFI)</summary>
+          <ol>
+            <li>Suba o PDF do capítulo.</li>
+            <li>Clique em <strong>Preparar</strong> na barra de cima. O capítulo inteiro fica legível
+                e clicável.</li>
+            <li>Clique na primeira frase do trecho: nasce o <strong>Ponto 1</strong>, e cada frase que
+                você clicar depois entra nele.</li>
+            <li>Terminou o trecho? Clique em <strong>Fim do ponto 1</strong> na caixa da direita.
+                O próximo clique no texto começa o Ponto 2.</li>
+            <li>Na caixa de cada ponto, clique em <strong>O ponto inteiro</strong> ou em qualquer frase
+                e escreva a observação ali mesmo. Salva sozinho.</li>
+            <li>Renomeie cada ponto no campo do nome, se quiser.</li>
+            <li><strong>Concluir preparação.</strong> No dia do encontro, o capítulo já aparece na
+                lista "Encontros preparados" — não precisa subir o PDF de novo.</li>
+          </ol>
+          <p class="warn">Os pontos e os comentários ficam guardados no seu Firebase e chegam sozinhos
+            no celular da outra facilitadora, na hora em que você seleciona.</p>
+        </details>
+
+        <details class="help">
+          <summary>Como compartilhar no Zoom</summary>
           <ol>
             <li>Abra esta página em uma <strong>janela só dela</strong> — sem outras abas ao lado.</li>
-            <li>Ligue o botão <strong>Transmissão</strong>: as notas passam a viver só nos celulares.</li>
-            <li>No Zoom, clique em <strong>Compartilhar tela → aba Janela</strong> e escolha a janela
-                da leitura. Não escolha "Tela" nem "Área de trabalho".</li>
+            <li>No Zoom: <strong>Compartilhar tela → aba Janela</strong> → escolha a janela da leitura.
+                Não escolha "Tela" nem "Área de trabalho".</li>
           </ol>
-          <p class="warn">Compartilhando uma <em>janela</em>, o Zoom envia só o conteúdo dela.
-            Compartilhando a <em>tela inteira</em>, tudo o que estiver visível vai junto.</p>
+          <p class="warn">Os comentários vivem só nos celulares: eles nunca são desenhados nesta tela.</p>
         </details>
       </div>
 
@@ -361,7 +512,7 @@ body[data-stage="light"] .veil{background:rgba(60,52,36,.42)}
         <div class="lab">Controle pelo celular</div>
         <div class="qr" id="qrBox"></div>
         <div class="hint" id="pairHint">Aponte a câmera do celular. As duas facilitadoras podem
-          conectar ao mesmo tempo: cada uma avança, volta e escreve as notas.</div>
+          conectar ao mesmo tempo: cada uma avança, volta e escreve os comentários.</div>
         <code id="pairUrl"></code>
       </div>
     </div>
@@ -386,12 +537,19 @@ body[data-stage="light"] .veil{background:rgba(60,52,36,.42)}
 
     <div id="cLive" hidden>
       <div class="blk">
-        <div class="lab"><span id="cNowLab">Frase atual</span> <em id="cRef"></em></div>
+        <div class="lab">
+          <span class="ponto-chip" id="cPonto" hidden></span>
+          <span id="cNowLab">Frase atual</span> <em id="cRef"></em>
+        </div>
         <div class="now-text" id="cNow"></div>
       </div>
+      <div class="blk" id="cObsPonto" hidden style="margin-top:18px">
+        <div class="lab">Observações do ponto</div>
+        <div class="obs-text" id="cObsPontoTexto"></div>
+      </div>
       <div class="blk" style="margin-top:18px">
-        <div class="lab">Notas do encontro <em id="cSaved" class="saved"></em></div>
-        <textarea id="notas" placeholder="Pontos-chave para explicar quando necessário. Escritas em conjunto pelas duas facilitadoras — nunca aparecem na projeção."></textarea>
+        <div class="lab"><span id="cComLab">Comentário desta frase</span> <em id="cSaved" class="saved"></em></div>
+        <textarea id="notas" placeholder="Pontos-chave para explicar quando necessário. Escritos em conjunto pelas duas facilitadoras — nunca aparecem na projeção."></textarea>
       </div>
       <div class="blk" style="margin-top:18px">
         <div class="lab">Em seguida</div>
@@ -402,10 +560,10 @@ body[data-stage="light"] .veil{background:rgba(60,52,36,.42)}
 
   <div class="ctrl-bar">
     <div class="ctrl-minor">
-      <button class="mini" id="cPrevPar" title="Parágrafo anterior">¶ ◀</button>
+      <button class="mini" id="cPrevPar" title="Bloco anterior">◀ ¶</button>
       <div class="ctrl-count" id="cCount">—</div>
-      <button class="mini" id="cModo" title="Alternar entre avançar por frase ou por parágrafo">Frase</button>
-      <button class="mini" id="cNextPar" title="Próximo parágrafo">▶ ¶</button>
+      <button class="mini" id="cModo" title="Alternar entre avançar por frase ou por bloco">Frase</button>
+      <button class="mini" id="cNextPar" title="Próximo bloco">¶ ▶</button>
     </div>
     <div class="ctrl-main">
       <button class="big" id="cPrev" aria-label="Voltar">
@@ -422,14 +580,14 @@ body[data-stage="light"] .veil{background:rgba(60,52,36,.42)}
 <div class="toast" id="toast" role="status"></div>
 
 <div class="veil" id="veil">
-  <div class="sheet" id="sheetNote">
+  <div class="sheet">
     <div class="ref" id="noteRef">—</div>
-    <h2>Nota do facilitador</h2>
+    <h2>Comentário</h2>
     <blockquote id="noteQuote"></blockquote>
-    <textarea id="noteText" placeholder="Pontos-chave para explicar quando necessário. Compartilhada com a outra facilitadora — nunca aparece na tela projetada."></textarea>
+    <textarea id="noteText" placeholder="Pontos-chave para explicar quando necessário. Compartilhado com a outra facilitadora — nunca aparece na tela projetada."></textarea>
     <div class="row">
       <button class="btn" id="noteClose">Fechar</button>
-      <button class="btn solid" id="noteSave">Salvar nota</button>
+      <button class="btn solid" id="noteSave">Salvar</button>
     </div>
   </div>
 </div>
@@ -463,10 +621,14 @@ const EU    = Math.random().toString(36).slice(2, 10);
 const $ = (id) => document.getElementById(id);
 const store = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
 const read  = (k)    => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const rid   = ()     => Math.random().toString(36).slice(2, 9);
 
 const S = {
-  title:"", raw:"", dateISO:null, segs:[], pars:[], i:0, mode:"sent",
-  docId:"", notes:{}, fs:1, cast:false, started:0
+  title:"", raw:"", dateISO:null, docId:"",
+  segs:[], pars:[],
+  trechos:[], soTrechos:true,
+  passos:[], mapa:new Map(), i:0, mode:"sent",
+  notes:{}, fs:1, started:0
 };
 
 let toastT;
@@ -484,7 +646,6 @@ function hash(s){
   return "d" + (h >>> 0).toString(36);
 }
 
-/* mantém a tela acesa durante o encontro */
 async function keepAwake(){
   try { if ("wakeLock" in navigator) await navigator.wakeLock.request("screen"); } catch (e) {}
 }
@@ -495,9 +656,8 @@ async function keepAwake(){
 function parseMeetingDate(name){
   if (!name) return null;
   let y, mo, d, m;
-  if ((m = name.match(/(20\d{2})[.\-_\/](\d{1,2})[.\-_\/](\d{1,2})/))) {
-    y = +m[1]; mo = +m[2]; d = +m[3];
-  } else if ((m = name.match(/(\d{1,2})[.\-_\/](\d{1,2})[.\-_\/](\d{2,4})/))) {
+  if ((m = name.match(/(20\d{2})[.\-_\/](\d{1,2})[.\-_\/](\d{1,2})/))) { y = +m[1]; mo = +m[2]; d = +m[3]; }
+  else if ((m = name.match(/(\d{1,2})[.\-_\/](\d{1,2})[.\-_\/](\d{2,4})/))) {
     d = +m[1]; mo = +m[2]; y = +m[3]; if (y < 100) y += 2000;
   } else return null;
   if (mo < 1 || mo > 12 || d < 1 || d > 31 || y < 2000 || y > 2100) return null;
@@ -555,12 +715,10 @@ function linesToDoc(lines){
   return { title: head.join(" ").trim(), blocks };
 }
 
-/* os marcadores do Curso são um número colado à palavra seguinte */
 function splitBlock(block){
   let t = block.text.trim(), alt = "";
   const am = t.match(/^\((\d{1,3})\)\s*/);
   if (am) { alt = am[1]; t = t.slice(am[0].length); }
-
   let parts;
   try {
     parts = t.split(new RegExp("(?<=[.!?”\"’»)\\]:])\\s*(?=\\d{1,3}[A-ZÀ-ÖØ-Þ“\"‘])"));
@@ -569,7 +727,6 @@ function splitBlock(block){
   } catch (e) {
     parts = t.split(/([.!?])\s+/).reduce((a, c, k) => { if (k % 2) a[a.length-1] += c; else a.push(c); return a; }, []);
   }
-
   const out = [];
   for (let p of parts) {
     p = p.trim();
@@ -598,27 +755,149 @@ function build(title, rawText, dateISO){
     S.pars.push(par);
   });
   S.docId = hash(S.title + "|" + S.segs.length + "|" + (S.segs[0] ? S.segs[0].text.slice(0,80) : ""));
+  S.trechos = [];
   try { S.notes = JSON.parse(read("vds:notas:" + S.docId) || "{}"); } catch (e) { S.notes = {}; }
+  try { S.trechos = normalizarTrechos(JSON.parse(read("vds:trechos:" + S.docId) || "[]")); } catch (e) { S.trechos = []; }
+  S.soTrechos = true;
+  recalcPassos();
+  S.i = 0;
 }
-
-const unitCount   = () => (S.mode === "sent" ? S.segs.length : S.pars.length);
-const activeRange = () => (S.mode === "sent" ? [S.i, S.i] : [S.pars[S.i].from, S.pars[S.i].to]);
-function noteKey(){
-  const s = S.segs[activeRange()[0]];
-  return S.mode === "sent" ? ("p" + s.par + "s" + s.mark) : ("p" + s.par);
-}
-const currentText = () => { const [a,b] = activeRange(); return S.segs.slice(a, b+1).map(x => x.text).join(" "); };
-const nextText    = () => { const nx = S.segs[activeRange()[1] + 1]; return nx ? nx.text : ""; };
 
 /* =====================================================================
-   3. Firebase — posição, texto e notas compartilhadas
+   3. Pontos (trechos) — cada ponto é um CONJUNTO de frases
    ===================================================================== */
-const FB = { on:false, db:null, api:null, erro:"", aplicando:false, tPos:null, tNota:{}, tNotaT:null };
+
+/* aceita o formato antigo ({from,to}) e o que vier do Firebase (array virando objeto) */
+function normalizarTrechos(lista){
+  if (!lista) return [];
+  const arr = Array.isArray(lista) ? lista : Object.values(lista);
+  const out = [];
+  arr.forEach((t) => {
+    if (!t) return;
+    let sents = [];
+    if (t.sents) sents = (Array.isArray(t.sents) ? t.sents : Object.values(t.sents)).map(Number);
+    else if (t.from != null && t.to != null) { for (let i = +t.from; i <= +t.to; i++) sents.push(i); }
+    sents = [...new Set(sents.filter(n => Number.isInteger(n) && n >= 0 && n < S.segs.length))].sort((a,b)=>a-b);
+    if (!sents.length) return;
+    out.push({ id: t.id || rid(), nome: t.nome || "Ponto", auto: t.auto !== false, sents });
+  });
+  out.sort((a, b) => a.sents[0] - b.sents[0]);
+  return out;
+}
+
+const temTrechos = () => S.trechos.length > 0;
+const filtrando  = () => temTrechos() && S.soTrechos;
+
+function donoDe(i, excetoId){
+  for (let k = 0; k < S.trechos.length; k++) {
+    const t = S.trechos[k];
+    if (excetoId && t.id === excetoId) continue;
+    if (t.sents.indexOf(i) >= 0) return t;
+  }
+  return null;
+}
+function trechoDe(i){
+  for (let k = 0; k < S.trechos.length; k++) if (S.trechos[k].sents.indexOf(i) >= 0) return k;
+  return null;
+}
+
+function ordenarTrechos(){
+  S.trechos.forEach(t => t.sents.sort((a,b) => a-b));
+  S.trechos = S.trechos.filter(t => t.sents.length);
+  S.trechos.sort((a, b) => a.sents[0] - b.sents[0]);
+  let n = 0;
+  S.trechos.forEach((t) => { n++; if (t.auto !== false) t.nome = "Ponto " + n; });
+}
+
+function refTrecho(t){
+  const a = S.segs[t.sents[0]], b = S.segs[t.sents[t.sents.length - 1]];
+  if (!a || !b) return "";
+  const ini = "¶" + a.par + "." + a.mark, fim = "¶" + b.par + "." + b.mark;
+  const contiguo = t.sents[t.sents.length-1] - t.sents[0] + 1 === t.sents.length;
+  if (ini === fim) return ini;
+  return ini + " – " + fim + (contiguo ? "" : " · " + t.sents.length + " frases");
+}
+
+function recalcPassos(){
+  const out = [];
+  if (filtrando()) {
+    S.trechos.forEach((t, ti) => {
+      if (S.mode === "sent") t.sents.forEach(i => out.push({ ids:[i], t:ti }));
+      else out.push({ ids: t.sents.slice(), t:ti });
+    });
+  } else if (S.mode === "sent") {
+    S.segs.forEach((_, i) => out.push({ ids:[i], t:trechoDe(i) }));
+  } else {
+    S.pars.forEach((p) => {
+      const ids = [];
+      for (let i = p.from; i <= p.to; i++) ids.push(i);
+      out.push({ ids, t:trechoDe(p.from) });
+    });
+  }
+  S.passos = out.length ? out : [{ ids:[0], t:null }];
+  S.mapa = new Map();
+  S.passos.forEach((p, k) => p.ids.forEach(i => S.mapa.set(i, k)));
+  if (S.i >= S.passos.length) S.i = S.passos.length - 1;
+  if (S.i < 0) S.i = 0;
+}
+
+const unitCount  = () => S.passos.length;
+const passoAtual = () => S.passos[S.i] || { ids:[0], t:null };
+const idsAtuais  = () => passoAtual().ids;
+const primeiraId = () => idsAtuais()[0] || 0;
+
+/* leva a posição para o passo que contém a frase `lo` */
+function irParaFrase(lo){
+  const k = S.mapa.has(lo) ? S.mapa.get(lo) : -1;
+  S.i = k < 0 ? 0 : k;
+}
+
+function noteKey(){
+  const p = passoAtual(), s = S.segs[p.ids[0]];
+  if (!s) return "x";
+  if (S.mode !== "sent" && p.t != null && S.trechos[p.t]) return "tr" + S.trechos[p.t].id;
+  if (S.mode !== "sent") return "p" + s.par;
+  return "p" + s.par + "s" + s.mark;
+}
+
+/* monta frases com os numerozinhos; usado no palco e no celular */
+function pintarSegs(el, ids, comParagrafo){
+  el.textContent = "";
+  let parAtual = null, anterior = null;
+  ids.forEach((i, k) => {
+    const s = S.segs[i];
+    if (!s) return;
+    if (comParagrafo && s.par !== parAtual) {
+      parAtual = s.par;
+      const pn = document.createElement("span");
+      pn.className = "par-num";
+      pn.textContent = s.par + ".";
+      el.appendChild(pn);
+      anterior = null;
+    }
+    if (anterior != null && i !== anterior + 1) {
+      const g = document.createElement("span");
+      g.className = "gap";
+      g.textContent = "… ";
+      el.appendChild(g);
+    }
+    const mk = document.createElement("span");
+    mk.className = "mark";
+    mk.textContent = s.mark;
+    el.appendChild(mk);
+    el.appendChild(document.createTextNode(s.text + (k < ids.length - 1 ? " " : "")));
+    anterior = i;
+  });
+}
+
+/* =====================================================================
+   4. Firebase
+   ===================================================================== */
+const FB = { on:false, db:null, api:null, erro:"", aplicando:false, tPos:null, tNota:{}, tNotaT:null, tTre:null };
 
 function fbPronto(){
   const c = CFG.firebase;
-  return !!(c && c.apiKey && c.apiKey !== "COLE_AQUI" && c.databaseURL &&
-            !/SEU-PROJETO/.test(c.databaseURL));
+  return !!(c && c.apiKey && c.apiKey !== "COLE_AQUI" && c.databaseURL && !/SEU-PROJETO/.test(c.databaseURL));
 }
 
 async function initFirebase(){
@@ -630,20 +909,13 @@ async function initFirebase(){
       import("https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js")
     ]);
     const app = appM.initializeApp(CFG.firebase);
-    try { await authM.signInAnonymously(authM.getAuth(app)); }
-    catch (e) { /* regras podem estar abertas; segue mesmo assim */ }
-    FB.api = dbM;
-    FB.db  = dbM.getDatabase(app);
-    FB.on  = true;
+    try { await authM.signInAnonymously(authM.getAuth(app)); } catch (e) {}
+    FB.api = dbM; FB.db = dbM.getDatabase(app); FB.on = true;
     return true;
-  } catch (e) {
-    FB.erro = (e && e.message) || "falha";
-    return false;
-  }
+  } catch (e) { FB.erro = (e && e.message) || "falha"; return false; }
 }
 
-const P = (sufixo) => "salas/" + SALA + "/" + sufixo;
-const R = (sufixo) => FB.api.ref(FB.db, P(sufixo));
+const R = (sufixo) => FB.api.ref(FB.db, "salas/" + SALA + "/" + sufixo);
 
 function presenca(){
   if (!FB.on) return;
@@ -651,11 +923,6 @@ function presenca(){
     const meu = R("presenca/" + EU);
     FB.api.onDisconnect(meu).remove();
     FB.api.set(meu, { modo: MODO, at: Date.now() });
-    FB.api.onValue(R("presenca"), (snap) => {
-      const v = snap.val() || {};
-      const n = Object.keys(v).filter(k => v[k] && v[k].modo === "controle").length;
-      if (typeof window.aoMudarPresenca === "function") window.aoMudarPresenca(n);
-    });
     setInterval(() => { try { FB.api.set(meu, { modo: MODO, at: Date.now() }); } catch (e) {} }, 45000);
   } catch (e) {}
 }
@@ -663,10 +930,8 @@ function presenca(){
 function publicarTexto(){
   if (!FB.on) return;
   try {
-    FB.api.set(R("texto"), {
-      docId: S.docId, title: S.title, date: S.dateISO || null,
-      raw: S.raw, by: EU, at: Date.now()
-    });
+    FB.api.set(R("texto"), { docId:S.docId, title:S.title, date:S.dateISO || null, raw:S.raw, by:EU, at:Date.now() });
+    FB.api.set(R("encontros/" + S.docId), { title:S.title, date:S.dateISO || null, raw:S.raw, at:Date.now() });
   } catch (e) {}
 }
 
@@ -674,9 +939,20 @@ function publicarPos(){
   if (!FB.on || FB.aplicando) return;
   clearTimeout(FB.tPos);
   FB.tPos = setTimeout(() => {
-    try { FB.api.set(R("pos"), { docId:S.docId, i:S.i, mode:S.mode, by:EU, at:Date.now() }); }
-    catch (e) {}
+    try {
+      FB.api.set(R("pos"), { docId:S.docId, i:S.i, lo:primeiraId(), mode:S.mode,
+                             soTrechos:S.soTrechos, by:EU, at:Date.now() });
+    } catch (e) {}
   }, 120);
+}
+
+function publicarTrechos(){
+  store("vds:trechos:" + S.docId, JSON.stringify(S.trechos));
+  if (!FB.on || !S.docId) return;
+  clearTimeout(FB.tTre);
+  FB.tTre = setTimeout(() => {
+    try { FB.api.set(R("trechos/" + S.docId), { lista:S.trechos, by:EU, at:Date.now() }); } catch (e) {}
+  }, 350);
 }
 
 function publicarNota(key, texto){
@@ -687,14 +963,14 @@ function publicarNota(key, texto){
   FB.tNotaT = setTimeout(() => {
     const lote = FB.tNota; FB.tNota = {};
     Object.keys(lote).forEach((k) => {
-      try { FB.api.set(R("notas/" + S.docId + "/" + k), { t: lote[k], by: EU, at: Date.now() }); }
-      catch (e) {}
+      try { FB.api.set(R("notas/" + S.docId + "/" + k), { t:lote[k], by:EU, at:Date.now() }); } catch (e) {}
     });
     if (typeof window.marcarSalvo === "function") window.marcarSalvo();
   }, 600);
 }
 
-let unsubNotas = null;
+let unsubNotas = null, unsubTrechos = null;
+
 function ouvirNotas(aoMudar){
   if (!FB.on || !S.docId) return;
   if (unsubNotas) { try { unsubNotas(); } catch (e) {} unsubNotas = null; }
@@ -703,17 +979,43 @@ function ouvirNotas(aoMudar){
       const v = snap.val() || {};
       let mudou = false;
       Object.keys(v).forEach((k) => {
-        const t = (v[k] && v[k].t || "").trim();
+        const t = ((v[k] && v[k].t) || "").trim();
         if ((S.notes[k] || "") === t) return;
         if (t) S.notes[k] = t; else delete S.notes[k];
         mudou = true;
       });
-      if (mudou) {
-        store("vds:notas:" + S.docId, JSON.stringify(S.notes));
-        if (aoMudar) aoMudar();
-      }
+      if (mudou) { store("vds:notas:" + S.docId, JSON.stringify(S.notes)); if (aoMudar) aoMudar(); }
     });
   } catch (e) {}
+}
+
+function ouvirTrechos(aoMudar){
+  if (!FB.on || !S.docId) return;
+  if (unsubTrechos) { try { unsubTrechos(); } catch (e) {} unsubTrechos = null; }
+  try {
+    unsubTrechos = FB.api.onValue(R("trechos/" + S.docId), (snap) => {
+      const v = snap.val();
+      if (!v || v.by === EU) return;
+      const lista = normalizarTrechos(v.lista);
+      if (JSON.stringify(lista) === JSON.stringify(S.trechos)) return;
+      const lo = primeiraId();
+      S.trechos = lista;
+      store("vds:trechos:" + S.docId, JSON.stringify(S.trechos));
+      recalcPassos();
+      irParaFrase(lo);
+      if (aoMudar) aoMudar();
+    });
+  } catch (e) {}
+}
+
+function aplicarPos(d){
+  if (!d || d.docId !== S.docId) return false;
+  if (d.soTrechos != null) S.soTrechos = !!d.soTrechos;
+  if (d.mode && d.mode !== S.mode) S.mode = d.mode;
+  recalcPassos();
+  if (d.lo != null && S.mapa.has(d.lo)) S.i = S.mapa.get(d.lo);
+  else S.i = Math.min(S.passos.length - 1, Math.max(0, d.i || 0));
+  return true;
 }
 
 function ouvirPos(aoMudar){
@@ -721,11 +1023,9 @@ function ouvirPos(aoMudar){
   try {
     FB.api.onValue(R("pos"), (snap) => {
       const d = snap.val();
-      if (!d || d.by === EU || d.docId !== S.docId) return;
+      if (!d || d.by === EU) return;
       FB.aplicando = true;
-      if (d.mode && d.mode !== S.mode) S.mode = d.mode;
-      S.i = Math.min(unitCount() - 1, Math.max(0, d.i || 0));
-      aoMudar();
+      if (aplicarPos(d)) aoMudar();
       FB.aplicando = false;
     });
   } catch (e) {}
@@ -743,14 +1043,13 @@ function ouvirTexto(aoMudar){
 }
 
 /* =====================================================================
-   4. Leitura do PDF
+   5. Leitura do PDF
    ===================================================================== */
 async function readPdf(file){
   const buf = await file.arrayBuffer();
   const lib = window.pdfjsLib;
   if (!lib) throw new Error("a biblioteca de PDF não carregou; recarregue a página");
-  lib.GlobalWorkerOptions.workerSrc =
-    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+  lib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
   const doc = await lib.getDocument({ data: buf }).promise;
   const linhas = [];
   for (let p = 1; p <= doc.numPages; p++) {
@@ -774,74 +1073,120 @@ async function readPdf(file){
 }
 
 /* =====================================================================
-   5. Texto de demonstração
+   6. Demonstração
    ===================================================================== */
 const DEMO_TITLE = "Como conduzir a leitura";
 const DEMO = [
-  "1. Esta é uma passagem de demonstração, escrita para mostrar o formato. 2Suba o PDF do encontro para substituí-la. 3O arquivo é lido dentro do seu navegador. 4Cada frase numerada vira um passo da leitura.",
-  "2. Aponte a câmera do celular para o QR ao lado para abrir o controle. 2As duas facilitadoras podem conectar ao mesmo tempo, cada uma na sua casa. 3No celular ficam as notas do encontro, a frase atual e a próxima. 4Nada disso aparece na tela projetada.",
-  "3. No palco, a barra de espaço, as setas e os botões da lateral também avançam. 2Servem de plano B se um celular descarregar. 3O que já foi lido fica esmaecido; o que ainda virá fica desfocado."
+  "1. Esta é uma passagem de demonstração, escrita para mostrar o formato. 2Suba o PDF do capítulo para substituí-la. 3Cada frase numerada vira um passo da leitura. 4Os numerozinhos são os mesmos do Curso.",
+  "2. Na preparação, clique numa frase e o Ponto 1 nasce ali. 2Cada frase que você clicar depois entra nele, mesmo fora de ordem. 3Clicar de novo numa frase já escolhida tira ela do ponto. 4Tudo fica salvo até o dia do encontro.",
+  "3. No celular ficam as observações, a frase atual e a próxima. 2Aponte a câmera para o QR ao lado. 3As duas facilitadoras conduzem juntas, cada uma na sua casa. 4Nada disso aparece na tela projetada."
 ].join("\n\n");
 
 /* =====================================================================
-   6. PALCO
+   7. PALCO
    ===================================================================== */
 function palco(){
   $("app").hidden = false;
   const app = $("app"), stage = $("stage"), reading = $("reading");
+  let prep = false, abertoId = null, selecionado = null, obsAberta = null;
 
-  /* ---- desenho ---- */
-  function render(){
-    reading.innerHTML = "";
-    if (S.title) {
-      const h = document.createElement("h1");
-      h.className = "doc-h";
-      const k = document.createElement("span");
-      k.className = "kicker";
-      k.textContent = S.dateISO ? ("Encontro de " + dateLong(S.dateISO)) : CLUBE;
-      h.appendChild(k);
-      h.appendChild(document.createTextNode(S.title));
-      reading.appendChild(h);
-    }
-    S.pars.forEach((par, p) => {
+  /* ---------- desenho ---------- */
+  function cabecalho(){
+    const h = document.createElement("h1");
+    h.className = "doc-h";
+    const k = document.createElement("span");
+    k.className = "kicker";
+    k.textContent = S.dateISO ? ("Encontro de " + dateLong(S.dateISO)) : CLUBE;
+    h.appendChild(k);
+    h.appendChild(document.createTextNode(S.title));
+    return h;
+  }
+
+  /* desenha as frases `ids` agrupadas por parágrafo, marcando os saltos */
+  function blocosDe(ids){
+    const out = [];
+    let k = 0;
+    while (k < ids.length) {
+      const pi = S.segs[ids[k]].p, p = S.pars[pi];
       const el = document.createElement("p");
-      el.className = "par"; el.dataset.p = p;
+      el.className = "par";
+      el.dataset.p = pi;
       const num = document.createElement("span");
       num.className = "par-num";
-      num.textContent = par.num + "." + (par.alt ? " (" + par.alt + ")" : "");
+      num.textContent = p.num + "." + (p.alt ? " (" + p.alt + ")" : "");
       el.appendChild(num);
-      par.sents.forEach((s, si) => {
+      let anterior = null;
+      while (k < ids.length && S.segs[ids[k]].p === pi) {
+        const i = ids[k], s = S.segs[i];
+        if (anterior != null && i !== anterior + 1) {
+          const g = document.createElement("span");
+          g.className = "gap";
+          g.textContent = "… ";
+          el.appendChild(g);
+        }
         const sp = document.createElement("span");
         sp.className = "seg";
-        sp.dataset.i = par.from + si;
-        if (si > 0) {
+        sp.dataset.i = i;
+        if (i > p.from) {
           const mk = document.createElement("span");
-          mk.className = "mark"; mk.textContent = s.mark;
+          mk.className = "mark";
+          mk.textContent = s.mark;
           sp.appendChild(mk);
         }
-        sp.appendChild(document.createTextNode(s.text + (si < par.sents.length - 1 ? " " : "")));
+        const ultimoDoPar = !(k + 1 < ids.length && S.segs[ids[k+1]].p === pi);
+        sp.appendChild(document.createTextNode(s.text + (ultimoDoPar ? "" : " ")));
         el.appendChild(sp);
+        anterior = i; k++;
+      }
+      out.push(el);
+    }
+    return out;
+  }
+
+  const todasIds = () => S.segs.map((_, i) => i);
+
+  function render(){
+    reading.textContent = "";
+    if (S.title) reading.appendChild(cabecalho());
+
+    if (filtrando() && !prep) {
+      S.trechos.forEach((t, ti) => {
+        if (ti > 0) reading.appendChild(Object.assign(document.createElement("div"), { className:"omitido" }));
+        const hd = document.createElement("div");
+        hd.className = "ponto-h";
+        const tag = document.createElement("span");
+        tag.className = "tag";
+        tag.textContent = t.nome;
+        const ref = document.createElement("span");
+        ref.className = "ref";
+        ref.textContent = refTrecho(t);
+        hd.appendChild(tag); hd.appendChild(ref);
+        reading.appendChild(hd);
+        blocosDe(t.sents).forEach(el => reading.appendChild(el));
       });
-      reading.appendChild(el);
-    });
+    } else {
+      blocosDe(todasIds()).forEach(el => reading.appendChild(el));
+    }
     paint(true);
+    if (prep) pintarPrep();
   }
 
   function paint(instant){
-    const [lo, hi] = activeRange();
+    if (prep) { atualizarRodape(); return; }
     reading.querySelectorAll(".seg").forEach((el) => {
       const i = +el.dataset.i;
       el.className = "seg";
-      if (i >= lo && i <= hi) el.classList.add("current");
-      else if (i < lo) { el.classList.add("past"); if (i === lo - 1) el.classList.add("p1"); }
+      const k = S.mapa.has(i) ? S.mapa.get(i) : S.i + 99;
+      if (k === S.i) el.classList.add("current");
+      else if (k < S.i) { el.classList.add("past"); if (k === S.i - 1) el.classList.add("p1"); }
       else {
-        const d = i - hi;
+        const d = k - S.i;
         el.classList.add("future");
         if (d > 1 && d <= 3) el.classList.add("f2"); else if (d > 3) el.classList.add("f3");
       }
     });
     reading.querySelectorAll(".par").forEach(p => p.classList.remove("has-current"));
-    const alvo = reading.querySelector('.seg[data-i="' + lo + '"]');
+    const alvo = reading.querySelector('.seg[data-i="' + primeiraId() + '"]');
     if (alvo) {
       alvo.parentElement.classList.add("has-current");
       const top = alvo.offsetTop - stage.clientHeight * 0.42;
@@ -852,80 +1197,343 @@ function palco(){
         stage.style.scrollBehavior = prev;
       } else stage.scrollTo({ top, behavior: "smooth" });
     }
-    const total = unitCount(), cur = S.segs[lo], rel = dateRelative(S.dateISO);
-    $("counter").textContent = (S.i + 1) + " / " + total + "   ·   ¶" + cur.par +
-      (S.mode === "sent" ? ("." + cur.mark) : "");
-    $("bar").style.width = ((S.i + 1) / total * 100).toFixed(2) + "%";
-    $("docMeta").textContent =
-      (S.dateISO ? dateShort(S.dateISO) + (rel ? " · " + rel : "") + " · " : "") +
-      S.pars.length + " parágrafos · " + S.segs.length + " frases";
-    $("upBtn").disabled = S.i <= 0;
-    $("downBtn").disabled = S.i >= total - 1;
-    store("vds:pos:" + S.docId, S.i + "|" + S.mode);
+    atualizarRodape();
+    store("vds:pos:" + S.docId, S.i + "|" + S.mode + "|" + (S.soTrechos ? 1 : 0));
     publicarPos();
   }
 
-  const go   = (d) => { const n = Math.min(unitCount()-1, Math.max(0, S.i + d)); if (n !== S.i) { S.i = n; paint(false); } };
-  const jump = (t) => { S.i = Math.min(unitCount()-1, Math.max(0, t)); paint(false); };
+  function atualizarRodape(){
+    const total = unitCount(), p = passoAtual(), cur = S.segs[p.ids[0]], rel = dateRelative(S.dateISO);
+    const nomePonto = (p.t != null && S.trechos[p.t]) ? S.trechos[p.t].nome + "   ·   " : "";
+    $("counter").textContent = prep
+      ? (S.trechos.length + (S.trechos.length === 1 ? " ponto" : " pontos") + " · " +
+         S.trechos.reduce((a, t) => a + t.sents.length, 0) + " frases")
+      : (nomePonto + (S.i + 1) + " / " + total + "   ·   ¶" + (cur ? cur.par : "") +
+         (S.mode === "sent" && cur ? ("." + cur.mark) : ""));
+    $("bar").style.width = prep ? "100%" : ((S.i + 1) / total * 100).toFixed(2) + "%";
+    $("docMeta").textContent =
+      (S.dateISO ? dateShort(S.dateISO) + (rel ? " · " + rel : "") + " · " : "") +
+      (temTrechos() ? S.trechos.length + " pontos · " : "") +
+      S.pars.length + " parágrafos · " + S.segs.length + " frases";
+    $("upBtn").disabled = S.i <= 0;
+    $("downBtn").disabled = S.i >= total - 1;
+    $("soTrechosBtn").hidden = !temTrechos() || prep;
+    $("soTrechosBtn").textContent = S.soTrechos ? "Capítulo completo" : "Só os pontos";
+    $("soTrechosBtn").classList.toggle("on", !S.soTrechos);
+    $("mPar").textContent = filtrando() ? "Trecho" : "Parágrafo";
+  }
+
+  const go = (d) => {
+    const n = Math.min(unitCount()-1, Math.max(0, S.i + d));
+    if (n !== S.i) { S.i = n; paint(false); }
+  };
 
   function setMode(m){
     if (m === S.mode) return;
-    const ancora = activeRange()[0];
+    const lo = primeiraId();
     S.mode = m;
-    S.i = (m === "par") ? S.segs[ancora].p : S.pars[Math.min(S.i, S.pars.length-1)].from;
+    recalcPassos();
+    irParaFrase(lo);
     $("mSent").classList.toggle("on", m === "sent");
     $("mPar").classList.toggle("on", m === "par");
-    paint(false);
-  }
-  function setModeSilent(m){
-    S.mode = m;
-    $("mSent").classList.toggle("on", m === "sent");
-    $("mPar").classList.toggle("on", m === "par");
+    render();
   }
 
-  /* ---- barra que se apaga ---- */
+  function setSoTrechos(v){
+    S.soTrechos = !!v;
+    const lo = primeiraId();
+    recalcPassos();
+    irParaFrase(lo);
+    render();
+    publicarPos();
+  }
+
+  /* ---------- preparação (FIFI) ---------- */
+  function setPrep(v){
+    prep = !!v;
+    abertoId = null; selecionado = null; obsAberta = null;
+    app.classList.toggle("prepping", prep);
+    $("prepBtn").classList.toggle("on", prep);
+    $("prepBtn").textContent = prep ? "Preparando" : "Preparar";
+    if (prep) app.classList.remove("hidechrome");
+    render();
+    listarPontos();
+    dica();
+  }
+
+  const pontoAberto = () => S.trechos.find(t => t.id === abertoId) || null;
+
+  function pintarPrep(){
+    reading.querySelectorAll(".seg").forEach((el) => {
+      const i = +el.dataset.i;
+      el.className = "seg";
+      const ti = trechoDe(i);
+      if (ti != null) {
+        el.classList.add("emtrecho");
+        if (S.trechos[ti].id === abertoId) el.classList.add("inicio");
+      }
+    });
+  }
+
+  function dica(){
+    const a = pontoAberto();
+    $("prepDica").innerHTML = a
+      ? ('<b>' + a.nome + '</b> está aberto: cada frase que você clicar entra nele, em qualquer ordem. ' +
+         'Clicar de novo numa frase dele <b>tira</b> ela. Terminou? <b>Fim do ponto</b>.')
+      : "Clique numa frase para começar um ponto novo. Clicar numa frase já escolhida reabre o ponto dela.";
+  }
+
+  /* um clique no texto: inclui, tira, ou reabre */
+  function cliquePrep(i){
+    const aberto = pontoAberto();
+
+    if (aberto) {
+      const pos = aberto.sents.indexOf(i);
+      if (pos >= 0) {
+        aberto.sents.splice(pos, 1);                       /* já estava: tira */
+        if (!aberto.sents.length) { abertoId = null; flash("Ponto vazio — removido."); }
+      } else {
+        const outro = donoDe(i, aberto.id);
+        if (outro) { flash("Essa frase já está em “" + outro.nome + "”."); return; }
+        aberto.sents.push(i);
+      }
+      ordenarTrechos();
+    } else {
+      const outro = donoDe(i);
+      if (outro) {
+        abertoId = outro.id;
+        flash("“" + outro.nome + "” reaberto. Clique para incluir ou tirar frases.");
+      } else {
+        const novo = { id: rid(), nome: "Ponto", auto: true, sents: [i] };
+        S.trechos.push(novo);
+        ordenarTrechos();
+        abertoId = novo.id;
+      }
+    }
+
+    publicarTrechos();
+    recalcPassos();
+    pintarPrep(); listarPontos(); atualizarRodape(); dica();
+  }
+
+  function tirarFrase(t, i){
+    const pos = t.sents.indexOf(i);
+    if (pos < 0) return;
+    t.sents.splice(pos, 1);
+    if (!t.sents.length && abertoId === t.id) abertoId = null;
+    ordenarTrechos();
+    publicarTrechos();
+    recalcPassos();
+    pintarPrep(); listarPontos(); atualizarRodape(); dica();
+  }
+
+  function fecharPonto(){
+    abertoId = null;
+    pintarPrep(); listarPontos(); dica();
+  }
+
+  /* o que chega da outra facilitadora não pode apagar o que estou digitando */
+  const digitando = () => !!(document.activeElement && document.activeElement.closest &&
+                             document.activeElement.closest(".prep-panel"));
+  function chegouNota(){
+    if ($("veil").classList.contains("open") && document.activeElement !== $("noteText"))
+      $("noteText").value = S.notes[noteKey()] || "";
+    if (prep && !digitando()) listarPontos();
+  }
+  function chegouTrechos(){
+    if (digitando()) return;
+    render();
+    if (prep) { listarPontos(); dica(); }
+    atualizarRodape();
+  }
+
+  /* uma linha de observação: clica, abre o campo, digita, salva sozinho */
+  function linhaObs(chave, rotulo, numero, ehTodo, aoTirar){
+    const row = document.createElement("div");
+    row.className = "obs-row" + (ehTodo ? " todo" : "") + ((S.notes[chave] || "").trim() ? " tem" : "");
+
+    const cab = document.createElement("div");
+    cab.className = "obs-cab";
+
+    const lin = document.createElement("button");
+    lin.className = "obs-lin";
+    lin.title = "Clique para escrever a observação";
+    const dot = document.createElement("span"); dot.className = "dot";
+    const n = document.createElement("span"); n.className = "n"; n.textContent = numero;
+    const s = document.createElement("span"); s.className = "s"; s.textContent = rotulo;
+    lin.appendChild(dot); lin.appendChild(n); lin.appendChild(s);
+    cab.appendChild(lin);
+
+    if (aoTirar) {
+      const x = document.createElement("button");
+      x.className = "obs-x";
+      x.textContent = "✕";
+      x.title = "Tirar esta frase do ponto";
+      x.setAttribute("aria-label", "Tirar esta frase do ponto");
+      x.onclick = (ev) => { ev.stopPropagation(); aoTirar(); };
+      cab.appendChild(x);
+    }
+    row.appendChild(cab);
+
+    const abrir = () => {
+      obsAberta = chave;
+      const ta = document.createElement("textarea");
+      ta.value = S.notes[chave] || "";
+      ta.placeholder = ehTodo ? "Observações sobre o ponto inteiro…" : "Observação sobre esta frase…";
+      ta.addEventListener("input", () => {
+        const v = ta.value;
+        if (v.trim()) S.notes[chave] = v; else delete S.notes[chave];
+        row.classList.toggle("tem", !!v.trim());
+        publicarNota(chave, v);
+        $("prepSync").textContent = "Salvando…";
+      });
+      ta.addEventListener("blur", () => { $("prepSync").textContent = "Salvo para o dia do encontro"; });
+      row.appendChild(ta);
+      ta.focus();
+      ta.setSelectionRange(ta.value.length, ta.value.length);
+    };
+
+    lin.onclick = () => {
+      const ja = row.querySelector("textarea");
+      if (ja) { ja.remove(); obsAberta = null; return; }
+      abrir();
+    };
+    if (obsAberta === chave) abrir();
+    return row;
+  }
+
+  function listarPontos(){
+    const lista = $("prepList");
+    lista.textContent = "";
+    if (!S.trechos.length) {
+      const v = document.createElement("div");
+      v.className = "prep-empty";
+      v.textContent = "Nenhum ponto ainda. Clique na primeira frase do trecho, no texto ao lado.";
+      lista.appendChild(v);
+      return;
+    }
+    S.trechos.forEach((t) => {
+      const aberto = t.id === abertoId;
+      const box = document.createElement("div");
+      box.className = "ponto" + (selecionado === t.id ? " sel" : "") + (aberto ? " aberto" : "");
+
+      const top = document.createElement("div");
+      top.className = "top";
+      const inp = document.createElement("input");
+      inp.value = t.nome;
+      inp.setAttribute("aria-label", "Nome do ponto");
+      inp.addEventListener("input", () => { t.nome = inp.value; t.auto = false; publicarTrechos(); });
+      inp.addEventListener("blur", () => {
+        if (!inp.value.trim()) { t.auto = true; ordenarTrechos(); publicarTrechos(); listarPontos(); }
+      });
+      const ref = document.createElement("span");
+      ref.className = "ref";
+      ref.textContent = refTrecho(t);
+      top.appendChild(inp); top.appendChild(ref);
+      box.appendChild(top);
+
+      const obs = document.createElement("div");
+      obs.className = "obs";
+      const lab = document.createElement("div");
+      lab.className = "obs-lab";
+      lab.textContent = "Observações · ✕ tira a frase do ponto";
+      obs.appendChild(lab);
+      obs.appendChild(linhaObs("tr" + t.id, "O ponto inteiro", "◆", true, null));
+      t.sents.forEach((i) => {
+        const s = S.segs[i];
+        obs.appendChild(linhaObs("p" + s.par + "s" + s.mark, s.text, s.par + "." + s.mark, false,
+                                 () => tirarFrase(t, i)));
+      });
+      box.appendChild(obs);
+
+      const acts = document.createElement("div");
+      acts.className = "acts";
+      const fim = document.createElement("button");
+      if (aberto) {
+        fim.className = "fim";
+        fim.textContent = "Fim do " + t.nome.toLowerCase();
+        fim.title = "Encerrar a seleção deste ponto";
+        fim.onclick = fecharPonto;
+      } else {
+        fim.className = "reabrir";
+        fim.textContent = "Continuar seleção";
+        fim.title = "Reabrir este ponto para incluir ou tirar frases";
+        fim.onclick = () => { abertoId = t.id; pintarPrep(); listarPontos(); dica(); };
+      }
+      const gap = document.createElement("span"); gap.className = "grow";
+      const irBtn = document.createElement("button");
+      irBtn.className = "icon up";
+      irBtn.textContent = "◎";
+      irBtn.title = "Mostrar no texto";
+      irBtn.onclick = () => {
+        selecionado = t.id;
+        const el = reading.querySelector('.seg[data-i="' + t.sents[0] + '"]');
+        if (el) stage.scrollTo({ top: el.offsetTop - stage.clientHeight * 0.3, behavior: "smooth" });
+        listarPontos();
+      };
+      const del = document.createElement("button");
+      del.className = "icon";
+      del.textContent = "🗑";
+      del.title = "Apagar o ponto inteiro";
+      del.onclick = () => {
+        S.trechos = S.trechos.filter(x => x.id !== t.id);
+        if (abertoId === t.id) abertoId = null;
+        ordenarTrechos();
+        publicarTrechos();
+        recalcPassos();
+        pintarPrep(); listarPontos(); atualizarRodape(); dica();
+      };
+      acts.appendChild(fim); acts.appendChild(gap); acts.appendChild(irBtn); acts.appendChild(del);
+      box.appendChild(acts);
+
+      lista.appendChild(box);
+    });
+  }
+
+  /* ---------- barra que se apaga ---------- */
   let idleT;
   function wake(){
+    if (prep) return;
     app.classList.remove("hidechrome");
     clearTimeout(idleT);
     idleT = setTimeout(() => app.classList.add("hidechrome"), 4500);
   }
 
-  /* ---- notas (plano B; o normal é o celular) ---- */
+  /* ---------- comentário (plano B do celular) ---------- */
   function abrirNota(){
-    if (S.cast) { flash("Transmissão ligada: escreva as notas pelo celular, para não aparecerem na projeção."); return; }
-    const [a, b] = activeRange(), s = S.segs[a];
-    $("noteRef").textContent = "Parágrafo " + s.par + (S.mode === "sent" ? " · frase " + s.mark : "");
-    $("noteQuote").textContent = S.segs.slice(a, b+1).map(x => x.text).join(" ");
+    const ids = idsAtuais(), s = S.segs[ids[0]], p = passoAtual();
+    const nome = (p.t != null && S.trechos[p.t]) ? S.trechos[p.t].nome + " · " : "";
+    $("noteRef").textContent = nome + "¶" + s.par + (S.mode === "sent" ? " · frase " + s.mark : "");
+    $("noteQuote").textContent = ids.map(i => S.segs[i].text).join(" ");
     $("noteText").value = S.notes[noteKey()] || "";
     $("veil").classList.add("open");
     setTimeout(() => $("noteText").focus(), 30);
   }
   const fecharNota = () => { $("veil").classList.remove("open"); stage.focus(); };
 
-  /* ---- QR ---- */
+  /* ---------- QR ---------- */
   const urlControle = location.origin + location.pathname + "#c/" + SALA;
   function desenharQr(box, tam){
-    box.innerHTML = "";
-    if (!window.QRCode) { box.textContent = "QR indisponível"; return; }
+    box.textContent = "";
+    if (!window.QRCode) { box.textContent = urlControle; return; }
     try {
-      new window.QRCode(box, {
-        text: urlControle, width: tam, height: tam,
-        colorDark: "#0C1119", colorLight: "#ffffff",
-        correctLevel: window.QRCode.CorrectLevel.M
-      });
+      new window.QRCode(box, { text:urlControle, width:tam, height:tam,
+        colorDark:"#0C1119", colorLight:"#ffffff", correctLevel:window.QRCode.CorrectLevel.M });
     } catch (e) { box.textContent = urlControle; }
   }
   function montarPar(){
     $("pairUrl").textContent = urlControle;
     if (!fbPronto()) {
       $("pairCard").classList.add("off");
-      $("qrBox").textContent = "Firebase ainda não configurado. Abra o config.js e siga o README — sem isso o site funciona, mas sem controle pelo celular.";
+      $("qrBox").textContent = "Firebase ainda não configurado. Sem ele o site funciona, mas sem controle pelo celular.";
       $("pairHint").textContent = "";
       $("pairUrl").hidden = true;
       $("qrBtn").hidden = true;
       return;
     }
+    $("pairCard").classList.remove("off");
+    $("pairUrl").hidden = false;
+    $("qrBtn").hidden = false;
     desenharQr($("qrBox"), 154);
     $("qrBigHint").textContent = "Sala " + SALA + " · as duas facilitadoras podem conectar ao mesmo tempo.";
   }
@@ -935,36 +1543,59 @@ function palco(){
     $("veilQr").classList.add("open");
   }
 
-  /* ---- carga ---- */
-  function mostrarLoader(){ $("loader").hidden = false; atualizarRetomar(); }
-  function esconderLoader(){ $("loader").hidden = true; stage.focus(); wake(); }
+  /* ---------- carga ---------- */
+  const mostrarLoader = () => { $("loader").hidden = false; listarEncontros(); };
+  const esconderLoader = () => { $("loader").hidden = true; stage.focus(); wake(); };
 
-  function iniciar(title, text, retomar, dateISO, doFirebase){
+  function iniciar(title, text, dateISO, opts){
+    opts = opts || {};
     build(title, text, dateISO);
     if (!S.segs.length) {
       flash("Não encontrei texto selecionável nesse PDF. Ele provavelmente é digitalizado e precisa passar por um OCR.");
       return;
     }
     $("docTitle").textContent = S.title;
-    setModeSilent("sent"); S.i = 0;
-    if (retomar) {
-      const [pi, pm] = String(retomar).split("|");
-      if (pm === "par") setModeSilent("par");
+    $("mSent").classList.add("on"); $("mPar").classList.remove("on");
+    S.mode = "sent"; S.i = 0;
+    const salvo = read("vds:pos:" + S.docId);
+    if (salvo) {
+      const [pi, pm, pf] = salvo.split("|");
+      if (pm === "par") { S.mode = "par"; $("mSent").classList.remove("on"); $("mPar").classList.add("on"); }
+      if (pf === "0") S.soTrechos = false;
+      recalcPassos();
       S.i = Math.min(unitCount()-1, Math.max(0, parseInt(pi, 10) || 0));
     }
     S.started = Date.now();
-    store("vds:ultimo", JSON.stringify({ title:S.title, text:S.raw, date:S.dateISO }));
+    prep = false;
+    app.classList.remove("prepping");
+    $("prepBtn").classList.remove("on");
+    $("prepBtn").textContent = "Preparar";
     render();
     esconderLoader();
-    ouvirNotas(() => { if ($("veil").classList.contains("open") && document.activeElement !== $("noteText")) $("noteText").value = S.notes[noteKey()] || ""; });
-    if (doFirebase !== false) publicarTexto();
+    ouvirNotas(chegouNota);
+    ouvirTrechos(chegouTrechos);
+    if (FB.on) {
+      try {
+        FB.api.get(R("trechos/" + S.docId)).then((snap) => {
+          const v = snap.val();
+          const lista = v ? normalizarTrechos(v.lista) : [];
+          if (lista.length) {
+            S.trechos = lista;
+            store("vds:trechos:" + S.docId, JSON.stringify(S.trechos));
+            recalcPassos();
+            render(); listarPontos();
+          }
+        });
+      } catch (e) {}
+    }
+    if (opts.publicar !== false) publicarTexto();
     publicarPos();
   }
 
   function tratarArquivo(f){
     if (!f) return;
     if (!/\.pdf$/i.test(f.name) && f.type !== "application/pdf") {
-      flash("Só leio PDF. Exporte o texto do encontro em PDF e tente de novo.");
+      flash("Só leio PDF. Exporte o capítulo em PDF e tente de novo.");
       return;
     }
     const iso = parseMeetingDate(f.name);
@@ -972,7 +1603,7 @@ function palco(){
     readPdf(f).then((texto) => {
       $("pickBtn").textContent = "Escolher arquivo";
       const nome = f.name.replace(/\.pdf$/i, "").replace(/^[\d.\s\-_\/]+/, "").trim();
-      iniciar(nome, texto, null, iso);
+      iniciar(nome, texto, iso);
     }).catch((err) => {
       $("pickBtn").textContent = "Escolher arquivo";
       flash("Não consegui ler esse PDF (" + (err && err.message ? err.message : "erro desconhecido") +
@@ -980,21 +1611,49 @@ function palco(){
     });
   }
 
-  function atualizarRetomar(){
-    const cru = read("vds:ultimo");
-    if (!cru) { $("resumeBtn").hidden = true; return; }
+  /* ---------- encontros já preparados ---------- */
+  function listarEncontros(){
+    if (!FB.on) { $("encList").hidden = true; return; }
     try {
-      const u = JSON.parse(cru);
-      $("resumeBtn").hidden = false;
-      $("resumeBtn").textContent = "Retomar “" + (u.title || "última leitura") + "”";
-      $("resumeBtn").onclick = () => {
-        build(u.title, u.text, u.date);
-        iniciar(u.title, u.text, read("vds:pos:" + S.docId), u.date);
-      };
-    } catch (e) { $("resumeBtn").hidden = true; }
+      Promise.all([FB.api.get(R("encontros")), FB.api.get(R("trechos"))]).then(([eS, tS]) => {
+        const encs = eS.val() || {}, tre = tS.val() || {};
+        const ids = Object.keys(encs);
+        if (!ids.length) { $("encList").hidden = true; return; }
+        ids.sort((a, b) => {
+          const da = encs[a].date || "", db = encs[b].date || "";
+          if (da !== db) return db.localeCompare(da);
+          return (encs[b].at || 0) - (encs[a].at || 0);
+        });
+        const box = $("encItems");
+        box.textContent = "";
+        ids.slice(0, 8).forEach((id) => {
+          const e = encs[id];
+          let n = 0;
+          if (tre[id] && tre[id].lista) {
+            const l = tre[id].lista;
+            n = (Array.isArray(l) ? l : Object.values(l)).length;
+          }
+          const b = document.createElement("button");
+          b.className = "enc";
+          const d = document.createElement("span");
+          d.className = "d";
+          d.textContent = e.date ? dateShort(e.date) : "—";
+          const t = document.createElement("span");
+          t.className = "t";
+          t.textContent = e.title || "Sem título";
+          const p = document.createElement("span");
+          p.className = "p";
+          p.textContent = n ? (n + (n === 1 ? " ponto" : " pontos")) : "sem pontos";
+          b.appendChild(d); b.appendChild(t); b.appendChild(p);
+          b.onclick = () => iniciar(e.title, e.raw, e.date);
+          box.appendChild(b);
+        });
+        $("encList").hidden = false;
+      });
+    } catch (e) { $("encList").hidden = true; }
   }
 
-  /* ---- ajustes ---- */
+  /* ---------- ajustes ---------- */
   function setFs(v){
     S.fs = Math.min(2.2, Math.max(.55, v));
     document.documentElement.style.setProperty("--fs", S.fs.toFixed(2));
@@ -1006,13 +1665,6 @@ function palco(){
     $("themeBtn").textContent = t === "light" ? "☀" : "☾";
     store("vds:tema", t);
   }
-  function setCast(v){
-    S.cast = !!v;
-    $("castBtn").classList.toggle("on", S.cast);
-    $("castBtn").textContent = S.cast ? "Transmitindo" : "Transmissão";
-    if (S.cast) fecharNota();
-    store("vds:cast", S.cast ? "1" : "0");
-  }
   function toggleFull(){
     try {
       if (!document.fullscreenElement) document.documentElement.requestFullscreen();
@@ -1020,8 +1672,12 @@ function palco(){
     } catch (e) { app.classList.toggle("hidechrome"); }
   }
 
-  /* ---- teclado ---- */
+  /* ---------- teclado ---------- */
   document.addEventListener("keydown", (e) => {
+    if (e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")) {
+      if (e.key === "Escape") e.target.blur();
+      return;
+    }
     if ($("veilQr").classList.contains("open")) {
       if (e.key === "Escape") { $("veilQr").classList.remove("open"); e.preventDefault(); }
       return;
@@ -1032,13 +1688,19 @@ function palco(){
     }
     if (!$("loader").hidden) return;
     const k = e.key;
+    if (prep) {
+      if (k === "Escape") { fecharPonto(); e.preventDefault(); }
+      else if (k === "p" || k === "P") { setPrep(false); e.preventDefault(); }
+      return;
+    }
     if (k === " " || k === "ArrowRight" || k === "ArrowDown" || k === "PageDown" || k === "Enter") { go(1); e.preventDefault(); }
     else if (k === "ArrowLeft" || k === "ArrowUp" || k === "PageUp" || k === "Backspace") { go(-1); e.preventDefault(); }
-    else if (k === "Home") { jump(0); e.preventDefault(); }
-    else if (k === "End")  { jump(unitCount()-1); e.preventDefault(); }
+    else if (k === "Home") { S.i = 0; paint(false); e.preventDefault(); }
+    else if (k === "End")  { S.i = unitCount()-1; paint(false); e.preventDefault(); }
     else if (k === "n" || k === "N") { abrirNota(); e.preventDefault(); }
+    else if (k === "p" || k === "P") { setPrep(true); e.preventDefault(); }
+    else if (k === "c" || k === "C") { if (temTrechos()) setSoTrechos(!S.soTrechos); e.preventDefault(); }
     else if (k === "q" || k === "Q") { abrirQrGrande(); e.preventDefault(); }
-    else if (k === "z" || k === "Z") { setCast(!S.cast); e.preventDefault(); }
     else if (k === "f" || k === "F") { toggleFull(); e.preventDefault(); }
     else if (k === "t" || k === "T") { mostrarLoader(); e.preventDefault(); }
     else if (k === "+" || k === "=") { setFs(S.fs + .08); e.preventDefault(); }
@@ -1047,39 +1709,46 @@ function palco(){
     wake();
   });
 
-  /* ---- ligações ---- */
-  $("mSent").onclick   = () => setMode("sent");
-  $("mPar").onclick    = () => setMode("par");
-  $("fPlus").onclick   = () => setFs(S.fs + .1);
-  $("fMinus").onclick  = () => setFs(S.fs - .1);
-  $("themeBtn").onclick= () => setTheme(document.body.dataset.stage === "light" ? "dark" : "light");
-  $("castBtn").onclick = () => setCast(!S.cast);
+  /* ---------- ligações ---------- */
+  $("mSent").onclick = () => setMode("sent");
+  $("mPar").onclick  = () => setMode("par");
+  $("prepBtn").onclick = () => setPrep(!prep);
+  $("prepDone").onclick = () => setPrep(false);
+  $("soTrechosBtn").onclick = () => setSoTrechos(!S.soTrechos);
+  $("fPlus").onclick = () => setFs(S.fs + .1);
+  $("fMinus").onclick = () => setFs(S.fs - .1);
+  $("themeBtn").onclick = () => setTheme(document.body.dataset.stage === "light" ? "dark" : "light");
   $("fullBtn").onclick = toggleFull;
   $("swapBtn").onclick = mostrarLoader;
-  $("qrBtn").onclick   = abrirQrGrande;
+  $("qrBtn").onclick = abrirQrGrande;
   $("qrClose").onclick = () => $("veilQr").classList.remove("open");
-  $("upBtn").onclick   = () => { go(-1); wake(); };
+  $("upBtn").onclick = () => { go(-1); wake(); };
   $("downBtn").onclick = () => { go(1); wake(); };
   $("noteClose").onclick = fecharNota;
-  $("noteSave").onclick  = () => {
+  $("noteSave").onclick = () => {
     const k = noteKey(), t = $("noteText").value.trim();
     if (t) S.notes[k] = t; else delete S.notes[k];
     publicarNota(k, t);
     fecharNota();
   };
-  $("veil").addEventListener("click",   (e) => { if (e.target === $("veil"))   fecharNota(); });
+  $("veil").addEventListener("click", (e) => { if (e.target === $("veil")) fecharNota(); });
   $("veilQr").addEventListener("click", (e) => { if (e.target === $("veilQr")) $("veilQr").classList.remove("open"); });
 
   stage.addEventListener("click", (e) => {
     if (e.target.closest("button")) return;
+    if (prep) {
+      const seg = e.target.closest(".seg");
+      if (seg) cliquePrep(+seg.dataset.i);
+      return;
+    }
     const x = e.clientX - stage.getBoundingClientRect().left;
     if (x < stage.clientWidth * 0.26) go(-1); else go(1);
   });
   document.addEventListener("mousemove", wake);
 
   $("pickBtn").onclick = () => $("file").click();
-  $("file").onchange   = (e) => tratarArquivo(e.target.files[0]);
-  $("demoBtn").onclick = () => iniciar(DEMO_TITLE, DEMO, null, null);
+  $("file").onchange = (e) => tratarArquivo(e.target.files[0]);
+  $("demoBtn").onclick = () => iniciar(DEMO_TITLE, DEMO, null);
 
   const drop = $("drop");
   ["dragenter","dragover"].forEach((ev) => {
@@ -1091,17 +1760,11 @@ function palco(){
   drop.addEventListener("drop", (e) => tratarArquivo(e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]));
   document.addEventListener("drop", (e) => e.preventDefault());
 
-  window.aoMudarPresenca = (n) => {
-    $("peers").hidden = n < 1;
-    $("peers").textContent = n + (n === 1 ? " celular" : " celulares");
-  };
-
-  /* ---- início ---- */
+  /* ---------- início ---------- */
   setTheme(read("vds:tema") === "light" ? "light" : "dark");
   const fs = parseFloat(read("vds:fs"));
   setFs(isNaN(fs) ? 1 : fs);
-  setCast(read("vds:cast") === "1");
-  iniciar(DEMO_TITLE, DEMO, null, null, false);
+  iniciar(DEMO_TITLE, DEMO, null, { publicar:false });
   mostrarLoader();
   montarPar();
   keepAwake();
@@ -1109,17 +1772,15 @@ function palco(){
   initFirebase().then((ok) => {
     if (!ok) return;
     presenca();
-    ouvirPos(() => paint(false));
+    ouvirPos(() => { if (!prep) render(); });
     montarPar();
-    if ($("loader").hidden) {           /* já havia texto aberto quando conectou */
-      publicarTexto();
-      ouvirNotas(() => {});
-    }
+    listarEncontros();
+    if ($("loader").hidden) { publicarTexto(); ouvirNotas(chegouNota); ouvirTrechos(chegouTrechos); }
   });
 }
 
 /* =====================================================================
-   7. CONTROLE (celular)
+   8. CONTROLE (celular)
    ===================================================================== */
 function controle(){
   $("ctrl").hidden = false;
@@ -1130,43 +1791,72 @@ function controle(){
 
   function pintar(){
     if (!temTexto) return;
-    const [a, b] = activeRange(), s = S.segs[a], total = unitCount();
+    const p = passoAtual(), s = S.segs[p.ids[0]], total = unitCount();
     $("cTitle").textContent = S.title;
-    $("cMeta").textContent  = (S.dateISO ? "Encontro de " + dateShort(S.dateISO) : CLUBE);
-    $("cNowLab").textContent = S.mode === "sent" ? "Frase atual" : "Parágrafo atual";
-    $("cRef").textContent   = "¶" + s.par + (S.mode === "sent" ? "." + s.mark : "");
-    $("cNow").textContent   = currentText();
-    $("cNext").textContent  = nextText() || "— fim do texto —";
+    $("cMeta").textContent = S.dateISO ? ("Encontro de " + dateShort(S.dateISO)) : ("Sala " + SALA);
+
+    const t = (p.t != null && S.trechos[p.t]) ? S.trechos[p.t] : null;
+    $("cPonto").hidden = !t;
+    if (t) $("cPonto").textContent = t.nome;
+
+    $("cNowLab").textContent = S.mode === "sent" ? "Frase atual"
+                             : (filtrando() ? "Trecho atual" : "Parágrafo atual");
+    $("cRef").textContent = s ? ("¶" + s.par + (S.mode === "sent" ? "." + s.mark : "")) : "";
+
+    pintarSegs($("cNow"), p.ids, S.mode !== "sent");
+    const prox = S.passos[S.i + 1];
+    if (prox) pintarSegs($("cNext"), prox.ids.slice(0, 2), false);
+    else $("cNext").textContent = "— fim da leitura —";
+
     $("cCount").textContent = (S.i + 1) + " / " + total;
-    $("cBar").style.width   = ((S.i + 1) / total * 100).toFixed(2) + "%";
-    $("cPrev").disabled     = S.i <= 0;
-    $("cNextBtn").disabled  = S.i >= total - 1;
-    $("cModo").textContent  = S.mode === "sent" ? "Frase" : "Parágrafo";
+    $("cBar").style.width = ((S.i + 1) / total * 100).toFixed(2) + "%";
+    $("cPrev").disabled = S.i <= 0;
+    $("cNextBtn").disabled = S.i >= total - 1;
+    $("cModo").textContent = S.mode === "sent" ? "Frase" : (filtrando() ? "Trecho" : "Parágrafo");
     $("cModo").classList.toggle("on", S.mode === "par");
-    if (document.activeElement !== $("notas")) $("notas").value = S.notes[noteKey()] || "";
+    $("cPrevPar").hidden = S.mode !== "sent";
+    $("cNextPar").hidden = S.mode !== "sent";
+
+    const chave = noteKey();
+    const obsPonto = t ? (S.notes["tr" + t.id] || "").trim() : "";
+    const mostrarObs = !!obsPonto && chave !== ("tr" + (t ? t.id : ""));
+    $("cObsPonto").hidden = !mostrarObs;
+    if (mostrarObs) $("cObsPontoTexto").textContent = obsPonto;
+
+    $("cComLab").textContent = S.mode === "sent"
+      ? "Comentário desta frase"
+      : (t ? "Observações do ponto" : "Comentário deste parágrafo");
+    if (document.activeElement !== $("notas")) $("notas").value = S.notes[chave] || "";
   }
 
   function mover(d){
     const n = Math.min(unitCount()-1, Math.max(0, S.i + d));
     if (n === S.i) return;
-    S.i = n;
-    pintar();
-    publicarPos();
+    S.i = n; pintar(); publicarPos();
     if (navigator.vibrate) { try { navigator.vibrate(8); } catch (e) {} }
   }
-  function moverPar(d){
-    const atual = S.mode === "par" ? S.i : S.segs[activeRange()[0]].p;
-    const alvo = Math.min(S.pars.length-1, Math.max(0, atual + d));
-    S.i = S.mode === "par" ? alvo : S.pars[alvo].from;
-    pintar();
-    publicarPos();
+  function moverBloco(d){
+    const p = passoAtual();
+    let lo = null;
+    if (filtrando()) {
+      const ti = (p.t == null ? 0 : p.t) + d;
+      if (ti < 0 || ti >= S.trechos.length) return;
+      lo = S.trechos[ti].sents[0];
+    } else {
+      const pi = S.segs[p.ids[0]].p + d;
+      if (pi < 0 || pi >= S.pars.length) return;
+      lo = S.pars[pi].from;
+    }
+    if (lo == null || !S.mapa.has(lo)) return;
+    S.i = S.mapa.get(lo);
+    pintar(); publicarPos();
   }
   function trocarModo(){
-    const ancora = activeRange()[0];
+    const lo = primeiraId();
     S.mode = S.mode === "sent" ? "par" : "sent";
-    S.i = S.mode === "par" ? S.segs[ancora].p : S.pars[Math.min(S.i, S.pars.length-1)].from;
-    pintar();
-    publicarPos();
+    recalcPassos();
+    irParaFrase(lo);
+    pintar(); publicarPos();
   }
 
   function adotar(d){
@@ -1174,27 +1864,27 @@ function controle(){
     temTexto = true;
     $("cEmpty").hidden = true;
     $("cLive").hidden = false;
-    S.i = 0; S.mode = "sent";
     S.started = S.started || Date.now();
-    pintar();
     ouvirNotas(pintar);
+    ouvirTrechos(pintar);
     try {
-      FB.api.get(R("pos")).then((snap) => {
-        const p = snap.val();
-        if (p && p.docId === S.docId) {
-          if (p.mode) S.mode = p.mode;
-          S.i = Math.min(unitCount()-1, Math.max(0, p.i || 0));
-          pintar();
-        }
-      });
-    } catch (e) {}
+      FB.api.get(R("trechos/" + S.docId)).then((snap) => {
+        const v = snap.val();
+        if (v) { S.trechos = normalizarTrechos(v.lista); recalcPassos(); }
+        return FB.api.get(R("pos"));
+      }).then((snap) => {
+        if (snap) aplicarPos(snap.val());
+        pintar();
+      }).catch(() => pintar());
+    } catch (e) { pintar(); }
+    pintar();
   }
 
-  $("cPrev").onclick    = () => mover(-1);
+  $("cPrev").onclick = () => mover(-1);
   $("cNextBtn").onclick = () => mover(1);
-  $("cPrevPar").onclick = () => moverPar(-1);
-  $("cNextPar").onclick = () => moverPar(1);
-  $("cModo").onclick    = trocarModo;
+  $("cPrevPar").onclick = () => moverBloco(-1);
+  $("cNextPar").onclick = () => moverBloco(1);
+  $("cModo").onclick = trocarModo;
 
   $("notas").addEventListener("input", () => {
     if (!temTexto) return;
@@ -1210,8 +1900,6 @@ function controle(){
     setTimeout(() => { $("cSaved").textContent = ""; $("cSaved").classList.remove("on"); }, 2200);
   };
 
-  window.aoMudarPresenca = () => {};
-
   setInterval(() => {
     if (!S.started) return;
     const t = Math.floor((Date.now() - S.started) / 1000);
@@ -1225,7 +1913,7 @@ function controle(){
     if (!ok) {
       dot.classList.add("err");
       $("cEmptyMsg").textContent = FB.erro === "sem-config"
-        ? "Este site ainda não foi conectado ao Firebase. Peça para configurarem o config.js — sem isso o celular não consegue controlar o palco."
+        ? "Este site ainda não foi conectado ao Firebase. Sem isso o celular não consegue controlar o palco."
         : "Não consegui conectar (" + FB.erro + "). Verifique a internet e recarregue.";
       return;
     }
@@ -1244,9 +1932,10 @@ function controle(){
 }
 
 /* =====================================================================
-   8. Partida
+   9. Partida
    ===================================================================== */
 if (MODO === "controle") controle(); else palco();
+
 </script>
 </body>
 </html>
