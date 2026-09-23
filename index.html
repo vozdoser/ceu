@@ -214,8 +214,39 @@ button{background:none;border:none;cursor:pointer}
   border-top:1px solid var(--line);padding:9px 11px;font-family:var(--sans);font-size:13px;
   line-height:1.6;display:block}
 .obs-row textarea:focus{outline:none;box-shadow:inset 2px 0 0 var(--brand)}
+.stepper{display:flex;gap:4px;margin:2px 0 4px}
+.stepper button{flex:1;height:26px;border:1px solid var(--line);border-radius:3px;background:var(--bg);
+  color:var(--muted);font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;
+  text-transform:uppercase;transition:color .15s,border-color .15s,background .15s}
+.stepper button:hover{color:var(--ink)}
+.stepper button.on{color:var(--signal);border-color:var(--signal);
+  background:color-mix(in srgb,var(--signal) 12%,transparent)}
+.stepper button.feito{color:var(--brand);border-color:var(--brand-dim)}
+
+.sec{display:flex;flex-direction:column;gap:9px}
+.sec>h3{margin:2px 0 0;font-family:var(--mono);font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--brand);font-weight:400}
+.sec>p{margin:0;color:var(--muted);font-size:12px;line-height:1.55}
+.qbox{border:1px solid var(--line);border-radius:4px;background:var(--bg);overflow:hidden}
+.qbox .qtop{display:flex;align-items:center;gap:7px;padding:8px 10px;border-bottom:1px solid var(--line)}
+.qbox .qtop b{flex:1;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted2);font-weight:400}
+.campo{display:flex;flex-direction:column}
+.campo label{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--muted);padding:8px 10px 3px}
+.campo textarea{width:100%;min-height:66px;resize:vertical;background:none;border:none;
+  padding:2px 10px 10px;font-family:var(--sans);font-size:13px;line-height:1.6;display:block}
+.campo textarea:focus{outline:none;box-shadow:inset 2px 0 0 var(--brand)}
+.campo+.campo{border-top:1px solid var(--line)}
+.campo.alto textarea{min-height:200px}
+.addq{border:1px dashed var(--line);border-radius:4px;color:var(--muted2);font-size:12.5px;
+  padding:9px;transition:border-color .16s,color .16s}
+.addq:hover{border-color:var(--brand);color:var(--brand)}
+
 .prep-foot{padding:13px 16px calc(13px + env(safe-area-inset-bottom));border-top:1px solid var(--line);
   display:flex;flex-direction:column;gap:9px}
+.prep-nav{display:flex;gap:8px}
+.prep-nav .btn{flex:1;text-align:center}
 .prep-sync{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
   color:var(--muted);display:flex;align-items:center;gap:7px}
 .prep-sync b{color:var(--brand);font-weight:400}
@@ -312,7 +343,28 @@ body[data-stage="light"] .veil{background:rgba(60,52,36,.42)}
 .sheet .qrbig img,.sheet .qrbig canvas{width:100%!important;height:100%!important}
 
 /* ===================== CONTROLE (celular) ===================== */
-.ctrl{position:fixed;inset:0;display:grid;grid-template-rows:auto auto 1fr auto;background:var(--bg)}
+.ctrl{position:fixed;inset:0;display:grid;grid-template-rows:auto auto auto 1fr auto;background:var(--bg)}
+.ctab{display:flex;gap:0;border-bottom:1px solid var(--line);background:var(--bg)}
+.ctab button{flex:1;height:40px;color:var(--muted);font-size:12.5px;font-weight:500;
+  border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
+.ctab button.on{color:var(--brand);border-bottom-color:var(--brand)}
+.ctab button .pin{display:inline-block;width:5px;height:5px;border-radius:50%;
+  background:var(--brand);margin-left:5px;vertical-align:middle;opacity:0}
+.ctab button.tem .pin{opacity:.7}
+.qcard{border:1px solid var(--line);border-radius:5px;background:var(--bg2);overflow:hidden}
+.qcard .qh{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--brand);padding:10px 13px 0}
+.qcard .qq{font-family:var(--serif);font-size:17px;line-height:1.45;color:var(--ink);padding:7px 13px 11px}
+.qcard .qr{border-top:1px solid var(--line);background:var(--bg);padding:10px 13px;
+  font-size:14px;line-height:1.6;color:var(--muted2);white-space:pre-wrap}
+.qcard .qr b{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--muted);font-weight:400;margin-bottom:5px}
+.qlista{display:flex;flex-direction:column;gap:9px;counter-reset:q}
+.qitem{display:flex;gap:11px;align-items:baseline;border-left:2px solid var(--brand-dim);
+  padding:2px 0 2px 12px}
+.qitem .num{font-family:var(--mono);font-size:11px;color:var(--brand);flex:none}
+.qitem .txt{font-family:var(--serif);font-size:17px;line-height:1.45;white-space:pre-wrap}
+.vazio{color:var(--muted);font-size:13.5px;line-height:1.6;text-align:center;padding:36px 20px}
 .ctrl-head{display:flex;align-items:center;gap:10px;
   padding:calc(10px + env(safe-area-inset-top)) 14px 10px;
   border-bottom:1px solid var(--line);background:var(--bg)}
@@ -412,14 +464,21 @@ body[data-stage="light"] .veil{background:rgba(60,52,36,.42)}
     <aside class="prep-panel" id="prepPanel" aria-label="Preparação do encontro">
       <div class="prep-head">
         <div class="lab">Preparação · FIFI</div>
-        <h2>Pontos do encontro</h2>
-        <p id="prepDica">Clique na primeira frase do trecho — nasce um ponto novo, que cresce a cada
-           clique. Clicar dentro de um ponto já criado reabre ele.</p>
+        <div class="stepper" id="stepper">
+          <button data-e="1" class="on">1 · Pontos</button>
+          <button data-e="2">2 · Reflexão</button>
+          <button data-e="3">3 · Finalização</button>
+        </div>
+        <h2 id="prepTitulo">Pontos do encontro</h2>
+        <p id="prepDica">Clique numa frase para começar um ponto novo.</p>
       </div>
       <div class="prep-list" id="prepList"></div>
       <div class="prep-foot">
         <div class="prep-sync" id="prepSync">Salvo para o dia do encontro</div>
-        <button class="btn solid" id="prepDone">Concluir preparação</button>
+        <div class="prep-nav">
+          <button class="btn" id="prepVoltar" hidden>Voltar</button>
+          <button class="btn solid" id="prepDone">Ok, ir para as perguntas</button>
+        </div>
       </div>
     </aside>
   </div>
@@ -529,6 +588,12 @@ body[data-stage="light"] .veil{background:rgba(60,52,36,.42)}
   </div>
   <div class="ctrl-prog"><i id="cBar" style="width:0%"></i></div>
 
+  <div class="ctab" id="ctab">
+    <button data-t="leitura" class="on">Leitura</button>
+    <button data-t="reflexao">Reflexão<span class="pin"></span></button>
+    <button data-t="fim">Finalização<span class="pin"></span></button>
+  </div>
+
   <div class="ctrl-body" id="cBody">
     <div class="ctrl-empty" id="cEmpty">
       <div class="logo" role="img" aria-label="Voz do Ser"></div>
@@ -556,6 +621,9 @@ body[data-stage="light"] .veil{background:rgba(60,52,36,.42)}
         <div class="next-text" id="cNext"></div>
       </div>
     </div>
+
+    <div id="cRef" hidden style="display:flex;flex-direction:column;gap:20px"></div>
+    <div id="cFim" hidden style="display:flex;flex-direction:column;gap:14px"></div>
   </div>
 
   <div class="ctrl-bar">
@@ -627,6 +695,7 @@ const S = {
   title:"", raw:"", dateISO:null, docId:"",
   segs:[], pars:[],
   trechos:[], soTrechos:true,
+  roteiro:{ deles:[], paraEles:["","",""], meditacao:"" },
   passos:[], mapa:new Map(), i:0, mode:"sent",
   notes:{}, fs:1, started:0
 };
@@ -758,6 +827,8 @@ function build(title, rawText, dateISO){
   S.trechos = [];
   try { S.notes = JSON.parse(read("vds:notas:" + S.docId) || "{}"); } catch (e) { S.notes = {}; }
   try { S.trechos = normalizarTrechos(JSON.parse(read("vds:trechos:" + S.docId) || "[]")); } catch (e) { S.trechos = []; }
+  try { S.roteiro = normalizarRoteiro(JSON.parse(read("vds:roteiro:" + S.docId) || "null")); }
+  catch (e) { S.roteiro = normalizarRoteiro(null); }
   S.soTrechos = true;
   recalcPassos();
   S.i = 0;
@@ -784,6 +855,22 @@ function normalizarTrechos(lista){
   out.sort((a, b) => a.sents[0] - b.sents[0]);
   return out;
 }
+
+/* roteiro do encontro: perguntas da reflexão e observações da meditação final */
+function normalizarRoteiro(v){
+  const lista = (x) => !x ? [] : (Array.isArray(x) ? x : Object.values(x));
+  const r = v || {};
+  const deles = lista(r.deles).map((d) => ({
+    id: (d && d.id) || rid(), q: (d && d.q) || "", r: (d && d.r) || ""
+  }));
+  const para = lista(r.paraEles).map(x => String(x || ""));
+  while (para.length < 3) para.push("");
+  return { deles: deles.length ? deles : [{ id: rid(), q:"", r:"" }],
+           paraEles: para.slice(0, 8),
+           meditacao: String(r.meditacao || "") };
+}
+const roteiroVazio = (r) =>
+  !r.deles.some(d => d.q.trim() || d.r.trim()) && !r.paraEles.some(x => x.trim());
 
 const temTrechos = () => S.trechos.length > 0;
 const filtrando  = () => temTrechos() && S.soTrechos;
@@ -969,6 +1056,33 @@ function publicarNota(key, texto){
   }, 600);
 }
 
+let tRot = null;
+function publicarRoteiro(){
+  store("vds:roteiro:" + S.docId, JSON.stringify(S.roteiro));
+  if (!FB.on || !S.docId) return;
+  clearTimeout(tRot);
+  tRot = setTimeout(() => {
+    try { FB.api.set(R("roteiro/" + S.docId), { r:S.roteiro, by:EU, at:Date.now() }); } catch (e) {}
+  }, 600);
+}
+
+let unsubRoteiro = null;
+function ouvirRoteiro(aoMudar){
+  if (!FB.on || !S.docId) return;
+  if (unsubRoteiro) { try { unsubRoteiro(); } catch (e) {} unsubRoteiro = null; }
+  try {
+    unsubRoteiro = FB.api.onValue(R("roteiro/" + S.docId), (snap) => {
+      const v = snap.val();
+      if (!v || v.by === EU) return;
+      const novo = normalizarRoteiro(v.r);
+      if (JSON.stringify(novo) === JSON.stringify(S.roteiro)) return;
+      S.roteiro = novo;
+      store("vds:roteiro:" + S.docId, JSON.stringify(S.roteiro));
+      if (aoMudar) aoMudar();
+    });
+  } catch (e) {}
+}
+
 let unsubNotas = null, unsubTrechos = null;
 
 function ouvirNotas(aoMudar){
@@ -1088,7 +1202,7 @@ const DEMO = [
 function palco(){
   $("app").hidden = false;
   const app = $("app"), stage = $("stage"), reading = $("reading");
-  let prep = false, abertoId = null, selecionado = null, obsAberta = null;
+  let prep = false, etapa = 1, abertoId = null, selecionado = null, obsAberta = null;
 
   /* ---------- desenho ---------- */
   function cabecalho(){
@@ -1249,16 +1363,153 @@ function palco(){
   }
 
   /* ---------- preparação (FIFI) ---------- */
-  function setPrep(v){
+  function setPrep(v, etapaInicial){
     prep = !!v;
+    etapa = etapaInicial || 1;
     abertoId = null; selecionado = null; obsAberta = null;
     app.classList.toggle("prepping", prep);
     $("prepBtn").classList.toggle("on", prep);
     $("prepBtn").textContent = prep ? "Preparando" : "Preparar";
     if (prep) app.classList.remove("hidechrome");
     render();
-    listarPontos();
-    dica();
+    mostrarEtapa();
+  }
+
+  /* ---- as três etapas da FIFI ---- */
+  function mostrarEtapa(){
+    if (!prep) return;
+    $("stepper").querySelectorAll("button").forEach((b) => {
+      const e = +b.dataset.e;
+      b.classList.toggle("on", e === etapa);
+      b.classList.toggle("feito", e !== etapa &&
+        (e === 1 ? temTrechos() : e === 2 ? !roteiroVazio(S.roteiro) : !!S.roteiro.meditacao.trim()));
+    });
+    $("prepVoltar").hidden = etapa === 1;
+    if (etapa === 1) {
+      $("prepTitulo").textContent = "Pontos do encontro";
+      $("prepDone").textContent = "Ok, ir para as perguntas";
+      listarPontos();
+      dica();
+    } else if (etapa === 2) {
+      $("prepTitulo").textContent = "Perguntas para o momento de reflexão";
+      $("prepDone").textContent = "Ok, ir para a finalização";
+      $("prepDica").textContent = "Nada aqui é obrigatório. O que você escrever aparece no celular das duas, na aba Reflexão.";
+      listarReflexao();
+    } else {
+      $("prepTitulo").textContent = "Finalização";
+      $("prepDone").textContent = "Concluir preparação";
+      $("prepDica").textContent = "As observações aparecem no celular das duas, na aba Finalização.";
+      listarFinalizacao();
+    }
+  }
+
+  function irEtapa(e){
+    etapa = Math.min(3, Math.max(1, e));
+    abertoId = null; obsAberta = null;
+    render();
+    mostrarEtapa();
+  }
+
+  /* campo de texto que salva sozinho */
+  function campo(rotulo, valor, aoMudar, alto){
+    const c = document.createElement("div");
+    c.className = "campo" + (alto ? " alto" : "");
+    const l = document.createElement("label");
+    l.textContent = rotulo;
+    const ta = document.createElement("textarea");
+    ta.value = valor || "";
+    ta.addEventListener("input", () => {
+      aoMudar(ta.value);
+      publicarRoteiro();
+      $("prepSync").textContent = "Salvando…";
+    });
+    ta.addEventListener("blur", () => {
+      $("prepSync").textContent = "Salvo para o dia do encontro";
+      mostrarEtapa();
+    });
+    c.appendChild(l); c.appendChild(ta);
+    return c;
+  }
+
+  function listarReflexao(){
+    const lista = $("prepList");
+    lista.textContent = "";
+
+    const s1 = document.createElement("div");
+    s1.className = "sec";
+    const h1 = document.createElement("h3");
+    h1.textContent = "Perguntas feitas por eles";
+    const p1 = document.createElement("p");
+    p1.textContent = "Traga do formulário as perguntas que os participantes enviaram, com a resposta que vocês prepararam.";
+    s1.appendChild(h1); s1.appendChild(p1);
+
+    S.roteiro.deles.forEach((d, k) => {
+      const box = document.createElement("div");
+      box.className = "qbox";
+      const top = document.createElement("div");
+      top.className = "qtop";
+      const b = document.createElement("b");
+      b.textContent = "Pergunta " + (k + 1);
+      top.appendChild(b);
+      if (S.roteiro.deles.length > 1) {
+        const x = document.createElement("button");
+        x.className = "icon";
+        x.textContent = "✕";
+        x.title = "Remover esta pergunta";
+        x.onclick = () => {
+          S.roteiro.deles = S.roteiro.deles.filter(o => o.id !== d.id);
+          if (!S.roteiro.deles.length) S.roteiro.deles = [{ id: rid(), q:"", r:"" }];
+          publicarRoteiro(); listarReflexao();
+        };
+        top.appendChild(x);
+      }
+      box.appendChild(top);
+      box.appendChild(campo("Pergunta", d.q, (v) => { d.q = v; }));
+      box.appendChild(campo("Resposta", d.r, (v) => { d.r = v; }));
+      s1.appendChild(box);
+    });
+
+    const add = document.createElement("button");
+    add.className = "addq";
+    add.textContent = "+ Adicionar outra pergunta";
+    add.onclick = () => {
+      S.roteiro.deles.push({ id: rid(), q:"", r:"" });
+      publicarRoteiro(); listarReflexao();
+    };
+    s1.appendChild(add);
+    lista.appendChild(s1);
+
+    const s2 = document.createElement("div");
+    s2.className = "sec";
+    s2.style.marginTop = "18px";
+    const h2 = document.createElement("h3");
+    h2.textContent = "Perguntas para eles";
+    const p2 = document.createElement("p");
+    p2.textContent = "Perguntas que vocês vão devolver ao grupo para refletir. Preencha quantas quiser.";
+    s2.appendChild(h2); s2.appendChild(p2);
+    const cx = document.createElement("div");
+    cx.className = "qbox";
+    S.roteiro.paraEles.forEach((v, k) => {
+      cx.appendChild(campo("Pergunta " + (k + 1), v, (nv) => { S.roteiro.paraEles[k] = nv; }));
+    });
+    s2.appendChild(cx);
+    lista.appendChild(s2);
+  }
+
+  function listarFinalizacao(){
+    const lista = $("prepList");
+    lista.textContent = "";
+    const s = document.createElement("div");
+    s.className = "sec";
+    const h = document.createElement("h3");
+    h.textContent = "Meditação final";
+    s.appendChild(h);
+    const cx = document.createElement("div");
+    cx.className = "qbox";
+    cx.appendChild(campo("Anote aqui observações para a meditação final",
+      S.roteiro.meditacao, (v) => { S.roteiro.meditacao = v; }, true));
+    s.appendChild(cx);
+    lista.appendChild(s);
   }
 
   const pontoAberto = () => S.trechos.find(t => t.id === abertoId) || null;
@@ -1338,13 +1589,17 @@ function palco(){
   function chegouNota(){
     if ($("veil").classList.contains("open") && document.activeElement !== $("noteText"))
       $("noteText").value = S.notes[noteKey()] || "";
-    if (prep && !digitando()) listarPontos();
+    if (prep && etapa === 1 && !digitando()) listarPontos();
   }
   function chegouTrechos(){
     if (digitando()) return;
     render();
-    if (prep) { listarPontos(); dica(); }
+    if (prep) mostrarEtapa();
     atualizarRodape();
+  }
+  function chegouRoteiro(){
+    if (digitando()) return;
+    if (prep && etapa !== 1) mostrarEtapa();
   }
 
   /* uma linha de observação: clica, abre o campo, digita, salva sozinho */
@@ -1574,6 +1829,7 @@ function palco(){
     esconderLoader();
     ouvirNotas(chegouNota);
     ouvirTrechos(chegouTrechos);
+    ouvirRoteiro(chegouRoteiro);
     if (FB.on) {
       try {
         FB.api.get(R("trechos/" + S.docId)).then((snap) => {
@@ -1583,8 +1839,15 @@ function palco(){
             S.trechos = lista;
             store("vds:trechos:" + S.docId, JSON.stringify(S.trechos));
             recalcPassos();
-            render(); listarPontos();
+            render(); if (prep) mostrarEtapa();
           }
+        });
+        FB.api.get(R("roteiro/" + S.docId)).then((snap) => {
+          const v = snap.val();
+          if (!v) return;
+          S.roteiro = normalizarRoteiro(v.r);
+          store("vds:roteiro:" + S.docId, JSON.stringify(S.roteiro));
+          if (prep) mostrarEtapa();
         });
       } catch (e) {}
     }
@@ -1689,7 +1952,7 @@ function palco(){
     if (!$("loader").hidden) return;
     const k = e.key;
     if (prep) {
-      if (k === "Escape") { fecharPonto(); e.preventDefault(); }
+      if (k === "Escape") { if (etapa === 1) fecharPonto(); else irEtapa(etapa - 1); e.preventDefault(); }
       else if (k === "p" || k === "P") { setPrep(false); e.preventDefault(); }
       return;
     }
@@ -1713,7 +1976,11 @@ function palco(){
   $("mSent").onclick = () => setMode("sent");
   $("mPar").onclick  = () => setMode("par");
   $("prepBtn").onclick = () => setPrep(!prep);
-  $("prepDone").onclick = () => setPrep(false);
+  $("prepDone").onclick = () => { if (etapa < 3) irEtapa(etapa + 1); else setPrep(false); };
+  $("prepVoltar").onclick = () => irEtapa(etapa - 1);
+  $("stepper").querySelectorAll("button").forEach((b) => {
+    b.onclick = () => irEtapa(+b.dataset.e);
+  });
   $("soTrechosBtn").onclick = () => setSoTrechos(!S.soTrechos);
   $("fPlus").onclick = () => setFs(S.fs + .1);
   $("fMinus").onclick = () => setFs(S.fs - .1);
@@ -1737,6 +2004,7 @@ function palco(){
   stage.addEventListener("click", (e) => {
     if (e.target.closest("button")) return;
     if (prep) {
+      if (etapa !== 1) return;                    /* só a etapa dos pontos edita o texto */
       const seg = e.target.closest(".seg");
       if (seg) cliquePrep(+seg.dataset.i);
       return;
@@ -1775,7 +2043,10 @@ function palco(){
     ouvirPos(() => { if (!prep) render(); });
     montarPar();
     listarEncontros();
-    if ($("loader").hidden) { publicarTexto(); ouvirNotas(chegouNota); ouvirTrechos(chegouTrechos); }
+    if ($("loader").hidden) {
+      publicarTexto();
+      ouvirNotas(chegouNota); ouvirTrechos(chegouTrechos); ouvirRoteiro(chegouRoteiro);
+    }
   });
 }
 
@@ -1786,8 +2057,122 @@ function controle(){
   $("ctrl").hidden = false;
   document.body.dataset.stage = read("vds:tema") === "light" ? "light" : "dark";
 
-  let temTexto = false;
+  let temTexto = false, aba = "leitura";
   const dot = $("cDot");
+
+  /* ---- abas: leitura, reflexão, finalização ---- */
+  function setAba(a){
+    aba = a;
+    $("ctab").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.t === a));
+    $("cLive").hidden = a !== "leitura" || !temTexto;
+    $("cEmpty").hidden = !(a === "leitura" && !temTexto);
+    $("cRef").hidden = a !== "reflexao";
+    $("cFim").hidden = a !== "fim";
+    $("cBody").scrollTop = 0;
+    if (a === "reflexao") pintarReflexao();
+    if (a === "fim") pintarFinalizacao();
+  }
+
+  function marcarAbas(){
+    const r = S.roteiro;
+    $("ctab").querySelector('[data-t="reflexao"]').classList.toggle("tem", !roteiroVazio(r));
+    $("ctab").querySelector('[data-t="fim"]').classList.toggle("tem", !!r.meditacao.trim());
+  }
+
+  function pintarReflexao(){
+    const el = $("cRef");
+    el.textContent = "";
+    const r = S.roteiro;
+    const deles = r.deles.filter(d => d.q.trim() || d.r.trim());
+    const para = r.paraEles.filter(x => x.trim());
+
+    if (!deles.length && !para.length) {
+      const v = document.createElement("div");
+      v.className = "vazio";
+      v.textContent = "Nenhuma pergunta anotada na preparação.";
+      el.appendChild(v);
+      return;
+    }
+
+    if (deles.length) {
+      const bl = document.createElement("div");
+      bl.className = "blk";
+      const lab = document.createElement("div");
+      lab.className = "lab";
+      lab.textContent = "Perguntas feitas por eles";
+      bl.appendChild(lab);
+      deles.forEach((d, k) => {
+        const c = document.createElement("div");
+        c.className = "qcard";
+        const h = document.createElement("div");
+        h.className = "qh";
+        h.textContent = "Pergunta " + (k + 1);
+        const q = document.createElement("div");
+        q.className = "qq";
+        q.textContent = d.q.trim() || "—";
+        c.appendChild(h); c.appendChild(q);
+        if (d.r.trim()) {
+          const rr = document.createElement("div");
+          rr.className = "qr";
+          const b = document.createElement("b");
+          b.textContent = "Resposta";
+          rr.appendChild(b);
+          rr.appendChild(document.createTextNode(d.r.trim()));
+          c.appendChild(rr);
+        }
+        bl.appendChild(c);
+      });
+      el.appendChild(bl);
+    }
+
+    if (para.length) {
+      const bl = document.createElement("div");
+      bl.className = "blk";
+      const lab = document.createElement("div");
+      lab.className = "lab";
+      lab.textContent = "Perguntas para eles";
+      bl.appendChild(lab);
+      const lista = document.createElement("div");
+      lista.className = "qlista";
+      para.forEach((t, k) => {
+        const it = document.createElement("div");
+        it.className = "qitem";
+        const n = document.createElement("span");
+        n.className = "num";
+        n.textContent = (k + 1) + ".";
+        const tx = document.createElement("span");
+        tx.className = "txt";
+        tx.textContent = t.trim();
+        it.appendChild(n); it.appendChild(tx);
+        lista.appendChild(it);
+      });
+      bl.appendChild(lista);
+      el.appendChild(bl);
+    }
+  }
+
+  function pintarFinalizacao(){
+    const el = $("cFim");
+    el.textContent = "";
+    const t = S.roteiro.meditacao.trim();
+    if (!t) {
+      const v = document.createElement("div");
+      v.className = "vazio";
+      v.textContent = "Nenhuma observação anotada para a meditação final.";
+      el.appendChild(v);
+      return;
+    }
+    const bl = document.createElement("div");
+    bl.className = "blk";
+    const lab = document.createElement("div");
+    lab.className = "lab";
+    lab.textContent = "Meditação final";
+    const tx = document.createElement("div");
+    tx.className = "obs-text";
+    tx.textContent = t;
+    bl.appendChild(lab); bl.appendChild(tx);
+    el.appendChild(bl);
+  }
 
   function pintar(){
     if (!temTexto) return;
@@ -1862,24 +2247,30 @@ function controle(){
   function adotar(d){
     build(d.title || "", d.raw, d.date || null);
     temTexto = true;
-    $("cEmpty").hidden = true;
-    $("cLive").hidden = false;
     S.started = S.started || Date.now();
     ouvirNotas(pintar);
     ouvirTrechos(pintar);
+    ouvirRoteiro(() => { marcarAbas(); if (aba === "reflexao") pintarReflexao(); if (aba === "fim") pintarFinalizacao(); });
     try {
       FB.api.get(R("trechos/" + S.docId)).then((snap) => {
         const v = snap.val();
         if (v) { S.trechos = normalizarTrechos(v.lista); recalcPassos(); }
+        return FB.api.get(R("roteiro/" + S.docId));
+      }).then((snap) => {
+        const v = snap && snap.val();
+        if (v) S.roteiro = normalizarRoteiro(v.r);
         return FB.api.get(R("pos"));
       }).then((snap) => {
         if (snap) aplicarPos(snap.val());
-        pintar();
-      }).catch(() => pintar());
+        pintar(); marcarAbas(); setAba(aba);
+      }).catch(() => { pintar(); marcarAbas(); setAba(aba); });
     } catch (e) { pintar(); }
     pintar();
+    marcarAbas();
+    setAba(aba);
   }
 
+  $("ctab").querySelectorAll("button").forEach((b) => { b.onclick = () => setAba(b.dataset.t); });
   $("cPrev").onclick = () => mover(-1);
   $("cNextBtn").onclick = () => mover(1);
   $("cPrevPar").onclick = () => moverBloco(-1);
