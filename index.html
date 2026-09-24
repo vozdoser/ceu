@@ -243,6 +243,30 @@ button{background:none;border:none;cursor:pointer}
   padding:9px;transition:border-color .16s,color .16s}
 .addq:hover{border-color:var(--brand);color:var(--brand)}
 
+/* backup */
+.bk{border:1px solid var(--line);border-radius:4px;background:var(--bg);padding:12px;
+  display:flex;flex-direction:column;gap:9px}
+.bk input{width:100%;background:var(--bg2);border:1px solid var(--line);border-radius:3px;
+  padding:8px 10px;font-family:var(--mono);font-size:11px}
+.bk input:focus{outline:none;border-color:var(--brand)}
+.bk .est{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);display:flex;align-items:center;gap:6px}
+.bk .est b{font-weight:400;color:var(--brand)}
+.bk .est.erro b{color:var(--alert)}
+.bk .linha{display:flex;gap:7px}
+.bk .linha .btn{flex:1;text-align:center}
+.bk .mini2{font-size:11.5px;color:var(--muted);text-decoration:underline;align-self:flex-start;
+  padding:0}
+.bk .mini2:hover{color:var(--brand)}
+.bk details{border-top:1px solid var(--line);padding-top:9px}
+.bk summary{cursor:pointer;font-size:12px;color:var(--muted2);list-style:none}
+.bk summary::-webkit-details-marker{display:none}
+.bk summary::before{content:"▸ ";color:var(--brand)}
+.bk details[open] summary::before{content:"▾ "}
+.bk ol{margin:9px 0 0;padding-left:18px;color:var(--muted2);font-size:12px;line-height:1.7}
+.bk code{font-family:var(--mono);font-size:10.5px;background:var(--bg2);border:1px solid var(--line);
+  border-radius:2px;padding:1px 4px}
+
 .prep-foot{padding:13px 16px calc(13px + env(safe-area-inset-bottom));border-top:1px solid var(--line);
   display:flex;flex-direction:column;gap:9px}
 .prep-nav{display:flex;gap:8px}
@@ -856,6 +880,86 @@ function normalizarTrechos(lista){
   return out;
 }
 
+/* =====================================================================
+   Backup: monta o pacote do encontro e manda para a planilha
+   ===================================================================== */
+let BACKUP_URL = read("vds:backupUrl") || "";
+
+function montarBackup(){
+  const usadas = new Set();
+  const pontos = S.trechos.map((t) => {
+    const kt = "tr" + t.id;
+    usadas.add(kt);
+    return {
+      nome: t.nome,
+      ref: refTrecho(t),
+      observacao: S.notes[kt] || "",
+      frases: t.sents.map((i) => {
+        const s = S.segs[i], k = "p" + s.par + "s" + s.mark;
+        usadas.add(k);
+        return { ref: s.par + "." + s.mark, texto: s.text, observacao: S.notes[k] || "" };
+      })
+    };
+  });
+  const outras = Object.keys(S.notes)
+    .filter(k => !usadas.has(k) && (S.notes[k] || "").trim())
+    .map(k => ({ ref: k.replace(/^p(\d+)s(\d+)$/, "¶$1.$2").replace(/^p(\d+)$/, "¶$1"),
+                 texto: S.notes[k] }));
+  const r = S.roteiro;
+  return {
+    sala: SALA,
+    docId: S.docId,
+    titulo: S.title,
+    data: S.dateISO,
+    geradoEm: new Date().toISOString(),
+    pontos,
+    reflexao: {
+      deles: r.deles.filter(d => d.q.trim() || d.r.trim())
+                    .map(d => ({ pergunta: d.q.trim(), resposta: d.r.trim() })),
+      paraEles: r.paraEles.filter(x => x.trim()).map(x => x.trim())
+    },
+    meditacao: r.meditacao.trim(),
+    outrasNotas: outras
+  };
+}
+
+async function enviarBackup(url, dados){
+  const corpo = JSON.stringify(dados);
+  try {
+    const resp = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: corpo
+    });
+    const txt = await resp.text();
+    try {
+      const j = JSON.parse(txt);
+      if (j.ok) return { ok: true, aba: j.aba };
+      return { ok: false, erro: j.erro || "o script recusou" };
+    } catch (e) { return { ok: true, aba: null }; }
+  } catch (e) {
+    /* o navegador pode bloquear a leitura da resposta; manda assim mesmo */
+    try {
+      await fetch(url, { method: "POST", mode: "no-cors",
+                         headers: { "Content-Type": "text/plain;charset=utf-8" }, body: corpo });
+      return { ok: true, aba: null, cego: true };
+    } catch (e2) {
+      return { ok: false, erro: (e2 && e2.message) || "não consegui alcançar o endereço" };
+    }
+  }
+}
+
+function baixarBackup(dados){
+  const nome = "clube-" + (dados.data || "sem-data") + ".json";
+  const blob = new Blob([JSON.stringify(dados, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = nome;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
+
 /* roteiro do encontro: perguntas da reflexão e observações da meditação final */
 function normalizarRoteiro(v){
   const lista = (x) => !x ? [] : (Array.isArray(x) ? x : Object.values(x));
@@ -1054,6 +1158,26 @@ function publicarNota(key, texto){
     });
     if (typeof window.marcarSalvo === "function") window.marcarSalvo();
   }, 600);
+}
+
+/* o endereço da planilha fica na sala, para as duas facilitadoras usarem o mesmo */
+function publicarBackupUrl(u){
+  BACKUP_URL = u || "";
+  store("vds:backupUrl", BACKUP_URL);
+  if (!FB.on) return;
+  try { FB.api.set(R("config/backupUrl"), BACKUP_URL); } catch (e) {}
+}
+function ouvirBackupUrl(aoMudar){
+  if (!FB.on) return;
+  try {
+    FB.api.onValue(R("config/backupUrl"), (snap) => {
+      const u = snap.val() || "";
+      if (u === BACKUP_URL) return;
+      BACKUP_URL = u;
+      store("vds:backupUrl", BACKUP_URL);
+      if (aoMudar) aoMudar();
+    });
+  } catch (e) {}
 }
 
 let tRot = null;
@@ -1510,6 +1634,124 @@ function palco(){
       S.roteiro.meditacao, (v) => { S.roteiro.meditacao = v; }, true));
     s.appendChild(cx);
     lista.appendChild(s);
+    lista.appendChild(secaoBackup());
+  }
+
+  /* ---- backup e documentação ---- */
+  function secaoBackup(){
+    const s = document.createElement("div");
+    s.className = "sec";
+    s.style.marginTop = "20px";
+    const h = document.createElement("h3");
+    h.textContent = "Backup e documentação";
+    s.appendChild(h);
+
+    const bk = document.createElement("div");
+    bk.className = "bk";
+
+    const est = document.createElement("div");
+    est.className = "est";
+    const estB = document.createElement("b");
+    est.appendChild(document.createTextNode("Planilha: "));
+    est.appendChild(estB);
+    estB.textContent = BACKUP_URL ? "conectada" : "não conectada";
+    bk.appendChild(est);
+
+    if (!BACKUP_URL) {
+      const inp = document.createElement("input");
+      inp.placeholder = "Cole aqui o endereço do Apps Script (termina em /exec)";
+      inp.spellcheck = false;
+      const salvar = document.createElement("button");
+      salvar.className = "btn solid";
+      salvar.textContent = "Conectar planilha";
+      salvar.onclick = () => {
+        const u = inp.value.trim();
+        if (!/^https:\/\/script\.google\.com\/.+\/exec$/.test(u)) {
+          flash("O endereço precisa começar com https://script.google.com e terminar em /exec.");
+          return;
+        }
+        publicarBackupUrl(u);
+        flash("Planilha conectada. O botão GERAR BACKUP já está valendo.");
+        listarFinalizacao();
+      };
+      const linha = document.createElement("div");
+      linha.className = "linha";
+      linha.appendChild(salvar);
+      bk.appendChild(inp);
+      bk.appendChild(linha);
+    } else {
+      const gerar = document.createElement("button");
+      gerar.className = "btn solid";
+      gerar.textContent = "GERAR BACKUP";
+      gerar.onclick = async () => {
+        gerar.disabled = true;
+        gerar.textContent = "Enviando…";
+        est.classList.remove("erro");
+        estB.textContent = "enviando…";
+        const r = await enviarBackup(BACKUP_URL, montarBackup());
+        gerar.disabled = false;
+        gerar.textContent = "GERAR BACKUP";
+        if (r.ok) {
+          estB.textContent = r.cego ? "enviado (confira a planilha)" : ("aba “" + (r.aba || "criada") + "” gravada");
+          flash(r.cego
+            ? "Enviado. O navegador não deixou ler a resposta, então confira a planilha para ter certeza."
+            : "Backup gravado na aba “" + (r.aba || "do encontro") + "”.");
+        } else {
+          est.classList.add("erro");
+          estB.textContent = "falhou";
+          flash("Não consegui gravar: " + r.erro + ". Verifique se a implantação está como “Qualquer pessoa”.");
+        }
+      };
+
+      const baixar = document.createElement("button");
+      baixar.className = "btn";
+      baixar.textContent = "Baixar .json";
+      baixar.title = "Uma cópia no seu computador, sem depender de nada";
+      baixar.onclick = () => baixarBackup(montarBackup());
+
+      const linha = document.createElement("div");
+      linha.className = "linha";
+      linha.appendChild(gerar);
+      linha.appendChild(baixar);
+      bk.appendChild(linha);
+
+      const trocar = document.createElement("button");
+      trocar.className = "mini2";
+      trocar.textContent = "trocar de planilha";
+      trocar.onclick = () => { publicarBackupUrl(""); listarFinalizacao(); };
+      bk.appendChild(trocar);
+    }
+
+    /* instruções, sempre à mão */
+    const det = document.createElement("details");
+    const sum = document.createElement("summary");
+    sum.textContent = "Como conectar a planilha (uma vez só)";
+    det.appendChild(sum);
+    const ol = document.createElement("ol");
+    [
+      "Crie uma planilha no Google Sheets — pode chamar “Clube de Estudos · Encontros”.",
+      "Nela: Extensões → Apps Script.",
+      "Apague o que estiver lá e cole o código do arquivo apps-script.gs.",
+      "Salve (ícone do disquete).",
+      "Implantar → Nova implantação → engrenagem → App da Web.",
+      "Executar como: Eu. Quem pode acessar: Qualquer pessoa. → Implantar.",
+      "Autorize quando o Google pedir (ele avisa que o app não é verificado: Avançado → Acessar).",
+      "Copie o endereço que termina em /exec e cole no campo acima."
+    ].forEach((t) => {
+      const li = document.createElement("li");
+      li.textContent = t;
+      ol.appendChild(li);
+    });
+    det.appendChild(ol);
+    const nota = document.createElement("p");
+    nota.className = "note-small";
+    nota.style.marginTop = "8px";
+    nota.textContent = "“Qualquer pessoa” significa qualquer um que conheça esse endereço — e só o site de vocês conhece. O script só escreve na sua planilha; não lê nada do seu Drive.";
+    det.appendChild(nota);
+    bk.appendChild(det);
+
+    s.appendChild(bk);
+    return s;
   }
 
   const pontoAberto = () => S.trechos.find(t => t.id === abertoId) || null;
@@ -2041,6 +2283,7 @@ function palco(){
     if (!ok) return;
     presenca();
     ouvirPos(() => { if (!prep) render(); });
+    ouvirBackupUrl(() => { if (prep && etapa === 3 && !digitando()) listarFinalizacao(); });
     montarPar();
     listarEncontros();
     if ($("loader").hidden) {
